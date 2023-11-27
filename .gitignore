@@ -161,3 +161,4 @@ cython_debug/
 raw_data/
 .DS_Store
 Zone.Identifier
+.python-version
