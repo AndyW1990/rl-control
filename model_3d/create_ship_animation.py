@@ -65,3 +65,7 @@ for i in range(0,250):
     ob.keyframe_insert(data_path="location",index=-1)
     ob.keyframe_insert(data_path="rotation_euler")
     frame_number += 1
+    
+    if i % 10 == 0:
+        print(bpy.data.objects['Vessel'].matrix_world)
+    
