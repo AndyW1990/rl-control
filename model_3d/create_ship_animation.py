@@ -46,22 +46,3 @@ def animate_ship():
 
     vessel = create_vessel(10, 5, 1, 0, 0, 0, 'Vessel')
 
-
-    ob = bpy.data.objects['Vessel']
-
-    frame_number = 0
-
-    for i in range(0,250):
-        x = np.sin(np.radians(i*1))
-        y = 0
-        z = np.sin(np.radians(i*3))
-        rx = 0
-        ry = np.radians(10*np.sin(np.radians(i*2)))
-        rz = 0
-
-        bpy.context.scene.frame_set(frame_number)
-        ob.location = (x,y,z)
-        ob.rotation_euler  = (rx,ry,rz)
-        ob.keyframe_insert(data_path="location",index=-1)
-        ob.keyframe_insert(data_path="rotation_euler")
-        frame_number += 1
