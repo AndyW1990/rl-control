@@ -106,10 +106,10 @@ def instantiate_model():
     vessel_driver = create_contraint(temp_vessel_empty, 'FIXED', 'Pedestal', 'Vessel')
     
     temp_rot_empty = create_empty(0, 0, 6, 0, 0, 0, 'Rotation Hinge')
-    rot_hinge = create_contraint(temp_vessel_empty, 'HINGE', 'Boom', 'Pedestal')
+    rot_hinge = create_contraint(temp_rot_empty, 'HINGE', 'Boom', 'Pedestal')
     
     temp_ext_empty = create_empty(0, 0, 0, 0, 0, 0, 'Extension Slider')
-    ext_slider = create_contraint(temp_vessel_empty, 'SLIDER', 'Extension', 'Boom')
+    ext_slider = create_contraint(temp_ext_empty, 'SLIDER', 'Extension', 'Boom')
     
     
     #connect bodies to coordinate systems
