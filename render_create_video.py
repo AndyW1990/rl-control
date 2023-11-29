@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from model_3d.create_ship_animation import animate_ship
 import os
 import bpy
 
@@ -12,8 +11,11 @@ def render_images():
     produced throughout the model. It then saves each individual image into a seperate
     folder to be called again later.
     """
-
-    animate_ship()
+    
+    abs_path = os.path.dirname(__file__)
+    rel_path = os.path.join(abs_path, '/model_3d/renderings')
+    
+    #animate_ship()
 
     # Creates a camera and positions the camera at a point to accurately view the object
     cam = bpy.data.objects['Camera']
@@ -32,7 +34,7 @@ def render_images():
         scene.render.fps = 24
         scene.render.ffmpeg.constant_rate_factor = 'LOW'
         scene.render.ffmpeg.ffmpeg_preset = 'REALTIME'
-        scene.render.filepath = '/Users/juleslockey/code/AndyW1990/rl-control/model_3d/test_images/test'
+        scene.render.filepath = rel_path
         bpy.ops.render.render(animation=True)
 
     lamp_data = bpy.data.lights.new(name="Lighting", type='SUN')
@@ -54,9 +56,9 @@ def generate_video():
     """
 
     # Sets the file locations and video name to be saved
-    image_folder = '/Users/juleslockey/code/AndyW1990/rl-control/model_3d/test_images' # make sure to use your folder
+    image_folder = rel_path # make sure to use your folder
     video_name = 'test_vid.mp4'
-    os.chdir("/Users/juleslockey/code/AndyW1990/rl-control/model_3d/test_images")
+    os.chdir(rel_path)
 
     # Takes out all of the images saved in the given folder and saves them in a list before sorting them
     images = [img for img in os.listdir(image_folder)
@@ -80,8 +82,9 @@ def generate_video():
     # 'Releases' the video, meaning it now knows the video is finished and pushes it back to the folder
     video.release()
 
+if __name__ == '__main__':
 # Calling the render images before the video creation
-render_images()
+    render_images()
 
 # Calling the generate_video function
-generate_video()
+    generate_video()
