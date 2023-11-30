@@ -89,7 +89,7 @@ def instantiate_model():
     
     
     #delete default bodies
-    delete_object('Camera')
+    #delete_object('Camera')
     delete_object('Cube')
     delete_object('Light')
     
