@@ -1,4 +1,4 @@
 bpy
 notebook
-cv2
+opencv-python
 tensorflow

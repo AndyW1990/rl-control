@@ -24,6 +24,7 @@ def render_images(dir_name, episode):
     # Creates a camera and positions the camera at a point to accurately view the object
 
     cam = bpy.data.objects['Camera']
+    
     # x_3d = 22
     # y_3d = -30
     # z_3d = 10
@@ -56,7 +57,6 @@ def render_images(dir_name, episode):
     # lamp2_object = bpy.data.objects.new(name="Lighting2s", object_data=lamp_data)
     # lamp2_object.location = (6.0, -10.0, 8.0)
     # lamp2_object.rotation_euler = (37.0, 3.2, 106.9)
-
 
     # Renders the images at set values and saves these images in a new folder
     for scene in bpy.data.scenes:
