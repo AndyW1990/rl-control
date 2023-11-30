@@ -87,6 +87,7 @@ def instantiate_model():
 
         return bpy.context.object
 
+
     #delete default bodies
     #delete_object('Camera')
     delete_object('Cube')
@@ -131,7 +132,8 @@ def instantiate_model():
     payload_empty.parent = extension_empty
     rot_hinge.parent = pedestal_empty
     ext_slider.parent = boom_empty
-
+    
+    
     vessel_obj = bpy.data.objects['Vessel Driver']
     rot_obj = bpy.data.objects['Rotation Hinge']
     ext_obj = bpy.data.objects['Extension Slider']
