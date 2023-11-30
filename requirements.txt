@@ -1,2 +1,4 @@
 bpy
 notebook
+opencv-python
+tensorflow

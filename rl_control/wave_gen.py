@@ -2,9 +2,10 @@ import numpy as np
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
+from rl_control.params import *
 
 def generate_wave_train(Hs, Tp, seed, N=100, r_min=0.5, r_max=10,
-                        sim_time=60, ramp_time=15, time_step=0.1):
+                        sim_time=60, ramp_time=15, time_step=float(TIME_STEP)):
     '''Funciton to generate random wave train and derive 3DoF motion for vessel
         Hs = Significant Wave Height (the average height of the highest one-third waves in a wave spectrum)
         Tp = Peak Spectral Wave Period (wave period associated with the most energetic waves in the total wave spectrum)
@@ -30,7 +31,8 @@ def generate_wave_train(Hs, Tp, seed, N=100, r_min=0.5, r_max=10,
     spectrum = 5/16 * Hs**2 * fp**4 * freqs**-5 * np.exp(-5/4 * (fp/freqs)**4)
     
     #derive the wave amplitudes for each frequency component
-    wave_amps = (2 * spectrum * (freqs[0:] - np.concatenate(([0],freqs))[0:-1]))**0.5
+    delta_freq = freqs[0:] - np.concatenate(([0],freqs))[0:-1]
+    wave_amps = (2 * spectrum * delta_freq)**0.5
     
     #Set random seed and generate phase offsets for each component
     np.random.seed(seed)   
@@ -96,8 +98,12 @@ def interpolate_raos(target_freqs):
 
 if __name__ == '__main__':
     wave_train, surge, heave, pitch = generate_wave_train(2.5, 5, 1)
-    
-    plt.plot(wave_train)
+    print(surge)
+    print('-----------------------------')
+    print(heave)
+    print('-----------------------------')
+    print(pitch)
+    #plt.plot(wave_train)
     
     
     

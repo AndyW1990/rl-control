@@ -86,7 +86,12 @@ def instantiate_model():
         bpy.context.object.rigid_body_constraint.object2 = bpy.data.objects[to_name]
 
         return bpy.context.object
-
+    
+    #delete default bodies
+    delete_object('Camera')
+    delete_object('Cube')
+    delete_object('Light')
+    
     #create body coordinate systems
     pedestal_empty = create_empty(0, 0, 6.5, 0, 0, 0, 'Pedestal Empty')
     boom_empty = create_empty(5, 0, 0, 0, 0, 0, 'Boom Empty')
