@@ -86,12 +86,12 @@ def instantiate_model():
         bpy.context.object.rigid_body_constraint.object2 = bpy.data.objects[to_name]
 
         return bpy.context.object
-    
+
     #delete default bodies
     delete_object('Camera')
     delete_object('Cube')
     delete_object('Light')
-    
+
     #create body coordinate systems
     pedestal_empty = create_empty(0, 0, 6.5, 0, 0, 0, 'Pedestal Empty')
     boom_empty = create_empty(5, 0, 0, 0, 0, 0, 'Boom Empty')
@@ -135,6 +135,9 @@ def instantiate_model():
     vessel_obj = bpy.data.objects['Vessel Driver']
     rot_obj = bpy.data.objects['Rotation Hinge']
     ext_obj = bpy.data.objects['Extension Slider']
+    payload_obj =bpy.data.objects['Payload']
+    target_obj =bpy.data.objects['Target']
     scene = bpy.context.scene
 
-    return vessel_obj,rot_obj,ext_obj,scene
+
+    return vessel_obj,rot_obj,ext_obj,payload_obj,target_obj,scene
