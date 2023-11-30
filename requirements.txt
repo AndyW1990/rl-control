@@ -1,2 +1,4 @@
 bpy
 notebook
+cv2
+tensorflow
