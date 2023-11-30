@@ -1,7 +1,7 @@
 from model_3d.create_model import instantiate_model
 from rl_control.wave_gen import generate_wave_train
-from render_create_video import render_images
-from render_create_video import generate_video
+from model_3d.render_create_video import render_images
+from model_3d.render_create_video import generate_video
 import bpy
 import numpy as np
 
@@ -25,7 +25,10 @@ ext = bpy.data.objects['Extension Slider']
 surge_mw = []
 heave_mw = []
 
-for i in range(int(sim_time/time_step)):
+no_frames = int(sim_time/time_step)
+bpy.context.scene.frame_end = no_frames
+
+for i in range(no_frames):
     
     bpy.context.scene.frame_set(i)
 

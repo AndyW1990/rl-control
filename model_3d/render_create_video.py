@@ -5,16 +5,19 @@ import bpy
 
 
 
-def render_images():
+def render_images(dir_name, episode):
     """
     Calls the animated ship function and produces a set of images based on each frame
     produced throughout the model. It then saves each individual image into a seperate
     folder to be called again later.
     """
-    
     abs_path = os.path.dirname(__file__)
-    rel_path = os.path.join(abs_path, '/model_3d/renderings')
+    directory = f'{abs_path}/renderings/{dir_name}/episode={episode}/'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
     
+    #abs_path = os.path.dirname(__file__)
+    #rel_path = os.path.join(abs_path, '/renderings')
     #animate_ship()
 
     # Creates a camera and positions the camera at a point to accurately view the object
@@ -31,10 +34,10 @@ def render_images():
     # Renders the images at set values and saves these images in a new folder
     for scene in bpy.data.scenes:
         scene.render.ffmpeg.codec = 'FFV1'
-        scene.render.fps = 24
+        scene.render.fps = 10
         scene.render.ffmpeg.constant_rate_factor = 'LOW'
         scene.render.ffmpeg.ffmpeg_preset = 'REALTIME'
-        scene.render.filepath = rel_path
+        scene.render.filepath = directory
         bpy.ops.render.render(animation=True)
 
     lamp_data = bpy.data.lights.new(name="Lighting", type='SUN')
@@ -48,17 +51,20 @@ def render_images():
     # And finally select it make active
     # scene.objects.active = lamp_object
 
-def generate_video():
+def generate_video(dir_name, episode, video_name=None):
     """
     Takes in all the image files in a ceration folder and from there, merges all of the images
     in order to produce a video at a set frame rate that is saved in the same folder as
     where the images are saved.
     """
+    # Sets the file locations and video name to be saved   
+    abs_path = os.path.dirname(__file__)
+    image_folder = f'{abs_path}/renderings/{dir_name}/episode={episode}/'
+        
+    if not video_name:
+        video_name = f'{dir_name}_{episode}.mp4'  
 
-    # Sets the file locations and video name to be saved
-    image_folder = rel_path # make sure to use your folder
-    video_name = 'test_vid.mp4'
-    os.chdir(rel_path)
+    os.chdir(image_folder)
 
     # Takes out all of the images saved in the given folder and saves them in a list before sorting them
     images = [img for img in os.listdir(image_folder)
@@ -72,7 +78,7 @@ def generate_video():
     height, width, layers = frame.shape
 
     # Sets up the video paramaters, such as the frame rate, the type of video and the size
-    fourcc = cv2.VideoWriter_fourcc(*'MP4V')
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     video = cv2.VideoWriter(video_name, fourcc, 24, (width, height))
 
     # For each image, it writes the image sequentially into the video to produce the video
@@ -83,8 +89,13 @@ def generate_video():
     video.release()
 
 if __name__ == '__main__':
+# Generate a model to test viedo creation
+    import tests.test_modelling_and_wave
+    
+    dir_name = 'test_vid'
+    episode = 0
 # Calling the render images before the video creation
-    render_images()
+    render_images(dir_name, episode)
 
 # Calling the generate_video function
-    generate_video()
+    generate_video(dir_name, episode)
