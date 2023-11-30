@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from rl_control.params import *
 
 def generate_wave_train(Hs, Tp, seed, N=5000, r_min=0.5, r_max=10,
-                        sim_time=60, ramp_time=15, time_step=float(TIME_STEP)):
+                        sim_time=60, ramp_time=15, time_step=TIME_STEP):
     '''Funciton to generate random wave train and derive 3DoF motion for vessel
         Hs = Significant Wave Height (the average height of the highest one-third waves in a wave spectrum)
         Tp = Peak Spectral Wave Period (wave period associated with the most energetic waves in the total wave spectrum)
