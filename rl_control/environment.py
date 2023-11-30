@@ -11,7 +11,7 @@ from model_3d.render_create_video import render_images,generate_video
 
 
 class Env():
-    def __init__(self, sim_time,Hs,Tp,seed):
+    def __init__(self, sim_time, Hs, Tp, seed):
 
         #delete any object in current scene
         self.delete_all_objs()
@@ -58,11 +58,11 @@ class Env():
         return new_state
 
 # Function to change vessel,crane,reward based on this time step and confirmation with get_done()
-    def step_env(self):
+    def step(self, action):
         self.frame +=1
         self.scene.frame_set(self.frame)
         self.move_vessel()
-        self.move_crane()
+        self.move_crane(action)
         self.state =  self.get_new_state()
         self.reward = self.get_reward()
         self.get_done()
@@ -124,7 +124,7 @@ class Env():
 # Generate the rendered picture and video
     def get_media(self,dir_name,episode):
         rendered_images = render_images(dir_name, episode)
-        generated_vid = generate_video(dir_name, episode, video_name=None)
+        generated_vid = generate_video(dir_name, episode)
 
 # Reset the environment and delete the objects for new episode
     def delete_all_objs(self):

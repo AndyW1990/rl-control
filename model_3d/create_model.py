@@ -88,7 +88,7 @@ def instantiate_model():
         return bpy.context.object
 
     #delete default bodies
-    delete_object('Camera')
+    #delete_object('Camera')
     delete_object('Cube')
     delete_object('Light')
 

@@ -22,6 +22,7 @@ def render_images(dir_name, episode):
 
     # Creates a camera and positions the camera at a point to accurately view the object
     cam = bpy.data.objects['Camera']
+    
     x = 22
     y = -30
     z = 10

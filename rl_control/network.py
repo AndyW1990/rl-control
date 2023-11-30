@@ -8,7 +8,7 @@ Neural network module.
 This will define the architecture used by the agent classes
 """
 
-def create_dqn_model(lr, neurons_layer_1, neurons_layer_2,neurons_layer_3,n_actions,input_dims):
+def create_dqn_model(lr, neurons_layer_1, neurons_layer_2, neurons_layer_3, n_actions, input_dims):
 
 # We have 9 potential actions as pairing of translation and rotation (-1,0,1)
     # n_actions = 9
