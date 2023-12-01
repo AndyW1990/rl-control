@@ -84,12 +84,12 @@ for i in range(no_episodes):
          'epsilon %.2f' % agent.epsilon)  
    agent.update_epsilon()
    
-   if i % 250 == 0:
-      env.get_media('simple_run',i)
+   if i % 100 == 0:
+      #env.get_media('simple_run',i)
       agent.save_model()
       
    if avg_score < np.mean(scores[-200:100]):
-      env.get_media('simple_run',i)
+      #env.get_media('simple_run',i)
       agent.save_model()
       break
 

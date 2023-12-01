@@ -124,8 +124,9 @@ class Env():
 
 # Generate the rendered picture and video
     def get_media(self,dir_name,episode):
-        rendered_images = render_images(dir_name, episode)
+        #rendered_images = render_images(dir_name, episode)
         #generated_vid = generate_video(dir_name, episode)
+        pass
 
 # Reset the environment and delete the objects for new episode
     def delete_all_objs(self):
