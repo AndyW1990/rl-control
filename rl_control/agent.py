@@ -8,7 +8,7 @@ from keras.models import load_model
 class Agent():
     def __init__(self, lr, gamma, n_actions, epsilon, batch_size,
                   input_dims, epsilon_dec=0.9, epsilon_end=0.01,
-                  mem_size=10000, replace_target=100, fname='rl_control_model.h5'):
+                  mem_size=10000, replace_target=1800, fname='rl_control_model.h5'):
 
     #Dont train both networks
     #Only train the target network that you use to choose actions,
