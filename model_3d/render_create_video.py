@@ -22,9 +22,10 @@ def render_images(dir_name, episode):
     #animate_ship()
 
     # Creates a camera and positions the camera at a point to accurately view the object
-
+    bpy.ops.object.camera_add()
+    bpy.context.object.name = 'Camera'
     cam = bpy.data.objects['Camera']
-    
+    bpy.context.scene.camera = cam
     # x_3d = 22
     # y_3d = -30
     # z_3d = 10
@@ -45,7 +46,8 @@ def render_images(dir_name, episode):
     # lamp_data.energy = 1000
     # lamp_object = bpy.data.objects.new(name="Lighting", object_data=lamp_data)
     # lamp_object.location = (15.0, -15.0, 15.0)
-
+    bpy.ops.object.light_add()
+    bpy.context.object.name = 'Light'
     light = bpy.data.objects['Light']
     light.data.type = 'SUN'
     light.rotation_euler = (0.5, 0, 1)

@@ -163,3 +163,4 @@ cython_debug/
 Zone.Identifier
 .python-version
 model_3d/renderings/
+models/
