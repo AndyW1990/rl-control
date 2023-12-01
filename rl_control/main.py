@@ -84,7 +84,7 @@ for i in range(no_episodes):
          'epsilon %.2f' % agent.epsilon)  
    agent.update_epsilon()
    
-   if i % 100 == 0:
+   if i % 250 == 0:
       env.get_media('simple_run',i)
       agent.save_model()
       

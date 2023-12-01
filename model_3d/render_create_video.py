@@ -102,7 +102,7 @@ def generate_video(dir_name, episode, video_name=None):
     height, width, layers = frame.shape
 
     # Sets up the video paramaters, such as the frame rate, the type of video and the size
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    fourcc = cv2.VideoWriter_fourcc(*'MP4v')
     video = cv2.VideoWriter(video_name, fourcc, 10, (width, height))
 
     # For each image, it writes the image sequentially into the video to produce the video
