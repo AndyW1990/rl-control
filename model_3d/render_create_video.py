@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 import os
 import bpy
+from PIL import Image, ImageDraw
+import glob
 
 
 
@@ -100,7 +102,7 @@ def generate_video(dir_name, episode, video_name=None):
     height, width, layers = frame.shape
 
     # Sets up the video paramaters, such as the frame rate, the type of video and the size
-    fourcc = cv2.VideoWriter_fourcc(*'h264')
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     video = cv2.VideoWriter(video_name, fourcc, 10, (width, height))
 
     # For each image, it writes the image sequentially into the video to produce the video
@@ -110,14 +112,54 @@ def generate_video(dir_name, episode, video_name=None):
     # 'Releases' the video, meaning it now knows the video is finished and pushes it back to the folder
     video.release()
 
+
+def generate_gif(dir_name, episode, video_name=None):
+    """
+    Takes in all the image files in a ceration folder and from there, merges all of the images
+    in order to produce a video at a set frame rate that is saved in the same folder as
+    where the images are saved.
+    """
+    # Sets the file locations and video name to be saved
+    abs_path = os.path.dirname(__file__)
+    image_folder = f'{abs_path}/renderings/{dir_name}/episode={episode}/'
+
+    if not video_name:
+        video_name = f'{dir_name}_{episode}'
+        
+    video_name + '.gif'
+
+    os.chdir(image_folder)
+
+    # Takes out all of the images saved in the given folder and saves them in a list before sorting them
+    images = [img for img in os.listdir(image_folder)
+              if img.endswith(".jpg") or
+                 img.endswith(".jpeg") or
+                 img.endswith("png")]
+    images = sorted(images)
+
+    # Takes in the height and width of the first image to make sure later on that all images are of the same size
+    frame = cv2.imread(os.path.join(image_folder, images[0]))
+    height, width, layers = frame.shape
+
+    # Sets up the video paramaters, such as the frame rate, the type of video and the size
+    fourcc = cv2.VideoWriter_fourcc(*'mp4')
+    video = cv2.VideoWriter(video_name, fourcc, 10, (width, height))
+
+    # For each image, it writes the image sequentially into the video to produce the video
+    for image in images:
+        video.write(cv2.imread(os.path.join(image_folder, image)))
+
+    # 'Releases' the video, meaning it now knows the video is finished and pushes it back to the folder
+    video.release()
+    
 if __name__ == '__main__':
 # Generate a model to test viedo creation
-    import tests.test_modelling_and_wave
+    #import tests.test_modelling_and_wave
 
     dir_name = 'test_vid'
     episode = 0
 # Calling the render images before the video creation
-    render_images(dir_name, episode)
+    #render_images(dir_name, episode)
 
 # Calling the generate_video function
-    generate_video(dir_name, episode)
+    generate_video('run_1', 0)

@@ -52,7 +52,7 @@ def generate_wave_train(Hs, Tp, seed, N=5000, r_min=0.5, r_max=10,
     pitch = []
     
     #ramp up slowly (log style)
-    ramp_values = np.logspace(0,2,int(ramp_time/time_step))/100
+    ramp_values = np.logspace(0,1,int(ramp_time/time_step))/10
     
     for t in np.arange(0,sim_time, time_step):
         if t < ramp_time:
