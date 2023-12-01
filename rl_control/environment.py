@@ -18,6 +18,7 @@ class Env():
 
         #rebuilt model for
         self.vessel,self.rot,self.ext,self.payload,self.target,self.scene = instantiate_model()
+        self.scene.frame_end = int(sim_time/TIME_STEP)
         self.Hs = Hs
         self.Tp = Tp
         self.seed = seed
@@ -42,7 +43,7 @@ class Env():
         ext_x = self.vessel.location[0]
 
         rot_ry = self.vessel.rotation_euler[0]
-        return vessel_x, vessel_z, vessel_ry, vessel_vx, vessel_vz, ext_x, rot_ry
+        return vessel_x, vessel_z, vessel_ry, vessel_vx, vessel_vz, vessel_vry, ext_x, rot_ry
     # Get the position after a set time step
     def get_new_state(self):
         vessel_x,_,vessel_z = self.vessel.location
@@ -54,7 +55,7 @@ class Env():
         ext_x = self.vessel.location[0]
 
         rot_ry = self.vessel.rotation_euler[0]
-        new_state = vessel_x, vessel_z, vessel_ry, vessel_vx, vessel_vz, ext_x, rot_ry
+        new_state = vessel_x, vessel_z, vessel_ry, vessel_vx, vessel_vz, vessel_vry, ext_x, rot_ry
         return new_state
 
 # Function to change vessel,crane,reward based on this time step and confirmation with get_done()
