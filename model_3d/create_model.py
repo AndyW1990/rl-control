@@ -100,7 +100,7 @@ def instantiate_model():
     boom = create_animated_cube(12, 2, 2, 0, 0, 0, 'Boom')
     extension = create_animated_cube(10, 2, 2, 0, 0, 0, 'Extension')
     payload = create_sphere(1.25, 0, 0, 0, 'Payload')
-    target = create_circle(2, 15, 0, 12.5, 'Target')
+    target = create_sphere(2, 15, 0, 12.5, 'Target')
 
     #create constraints
     temp_vessel_empty = create_empty(0, 0, 0, 0, 0, 0, 'Vessel Driver')

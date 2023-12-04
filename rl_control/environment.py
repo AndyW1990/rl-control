@@ -31,7 +31,7 @@ class Env():
 
     # Generate the wave
     def generate_wave(self):
-        return generate_wave_train(self.Hs, self.Tp, self.seed, N=2500, ramp_time=10)
+        return generate_wave_train(self.Hs, self.Tp, self.seed, ramp_time=10)
 
     # Set initial zero position
     def set_initial_state(self):
@@ -43,7 +43,7 @@ class Env():
         ext_x = (np.random.random()-0.5)*5
         self.ext.location[0] = ext_x
 
-        rot_ry = (np.random.random()-0.5)*60
+        rot_ry = (np.random.random()-0.5)*np.pi/4
         self.rot.rotation_euler[1] = rot_ry
         
         return vessel_x, vessel_z, vessel_ry, vessel_vx, vessel_vz, vessel_vry, ext_x, rot_ry
@@ -119,8 +119,7 @@ class Env():
         payload_loc = self.payload.matrix_world.translation
         target_loc = self.target.matrix_world.translation
         euclidean_reward = generate_euclidean_reward(target_loc, payload_loc)
-        time_reward = -TIME_STEP
-        return euclidean_reward + time_reward
+        return euclidean_reward
 
 # Check if the cycle is over
     def get_done(self):
