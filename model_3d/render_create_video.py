@@ -2,10 +2,6 @@ import cv2
 import numpy as np
 import os
 import bpy
-import imageio
-
-
-
 
 
 def render_images(dir_name, episode):
@@ -83,8 +79,6 @@ def generate_video(dir_name, episode, video_name=None):
     if not video_name:
         video_name = f'{dir_name}_{episode}.mp4'
 
-    os.chdir(image_folder)
-
     # Takes out all of the images saved in the given folder and saves them in a list before sorting them
     images = [img for img in os.listdir(image_folder)
               if img.endswith(".jpg") or
@@ -97,8 +91,8 @@ def generate_video(dir_name, episode, video_name=None):
     height, width, layers = frame.shape
 
     # Sets up the video paramaters, such as the frame rate, the type of video and the size
-    fourcc = cv2.VideoWriter_fourcc(*'MP4v')
-    video = cv2.VideoWriter(video_name, fourcc, 10, (width, height))
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    video = cv2.VideoWriter(image_folder + video_name, fourcc, 10, (width, height))
 
     # For each image, it writes the image sequentially into the video to produce the video
     for image in images:
@@ -118,5 +112,4 @@ if __name__ == '__main__':
 
 # Calling the generate_video function
     generate_video(dir_name, episode)
-
 

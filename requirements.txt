@@ -2,3 +2,4 @@ bpy
 notebook
 opencv-python
 tensorflow
+pandas
