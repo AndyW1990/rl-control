@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import os
 import bpy
+import imageio
 
 
 
@@ -24,7 +25,7 @@ def render_images(dir_name, episode):
     # Creates a camera and positions the camera at a point to accurately view the object
 
     cam = bpy.data.objects['Camera']
-    
+
     # x_3d = 22
     # y_3d = -30
     # z_3d = 10
@@ -40,23 +41,11 @@ def render_images(dir_name, episode):
     cam.location = (x_2d,y_2d,z_2d)
     cam.rotation_euler  = (rx_2d,ry_2d,rz_2d)
 
-    # Sun Object
-    # lamp_data = bpy.data.lights.new(name="Lighting", type='AREA')
-    # lamp_data.energy = 1000
-    # lamp_object = bpy.data.objects.new(name="Lighting", object_data=lamp_data)
-    # lamp_object.location = (15.0, -15.0, 15.0)
 
     light = bpy.data.objects['Light']
     light.data.type = 'SUN'
     light.rotation_euler = (0.5, 0, 1)
     light.data.energy = 10
-
-    # Lamp Object
-    # lamp2_data = bpy.data.lights.new(name="Lighting2", type='POINT')
-    # lamp2_data.energy = 1000
-    # lamp2_object = bpy.data.objects.new(name="Lighting2s", object_data=lamp_data)
-    # lamp2_object.location = (6.0, -10.0, 8.0)
-    # lamp2_object.rotation_euler = (37.0, 3.2, 106.9)
 
     # Renders the images at set values and saves these images in a new folder
     for scene in bpy.data.scenes:
@@ -108,14 +97,28 @@ def generate_video(dir_name, episode, video_name=None):
     # 'Releases' the video, meaning it now knows the video is finished and pushes it back to the folder
     video.release()
 
+
+def generate_gif():
+
+    abs_path = os.path.dirname(__file__)
+    image_folder = f'{abs_path}/renderings/{dir_name}/episode={episode}/'
+    images = [img for img in os.listdir(image_folder)
+              if img.endswith(".jpg") or
+                 img.endswith(".jpeg") or
+                 img.endswith("png")]
+    images = sorted(images)
+    imageio.mimsave(f'{abs_path}/renderings/{dir_name}/episode={episode}//movie.gif', images)
+
 if __name__ == '__main__':
 # Generate a model to test viedo creation
-    import tests.test_modelling_and_wave
+    # import tests.test_modelling_and_wave
 
     dir_name = 'test_vid'
     episode = 0
 # Calling the render images before the video creation
-    render_images(dir_name, episode)
+    #render_images(dir_name, episode)
 
 # Calling the generate_video function
-    generate_video(dir_name, episode)
+    # generate_video(dir_name, episode)
+
+    generate_gif()
