@@ -31,7 +31,7 @@ class Env():
 
     # Generate the wave
     def generate_wave(self):
-        return generate_wave_train(self.Hs, self.Tp, self.seed, N=1000)
+        return generate_wave_train(self.Hs, self.Tp, self.seed, N=2500, ramp_time=10)
 
     # Set initial zero position
     def set_initial_state(self):
@@ -39,10 +39,13 @@ class Env():
         _,vessel_ry,_ = self.vessel.rotation_euler
         vessel_vx, vessel_vz = 0.0, 0.0
         vessel_vry = 0.0
+        
+        ext_x = (np.random.random()-0.5)*5
+        self.ext.location[0] = ext_x
 
-        ext_x = self.vessel.location[0]
-
-        rot_ry = self.vessel.rotation_euler[0]
+        rot_ry = (np.random.random()-0.5)*60
+        self.rot.rotation_euler[1] = rot_ry
+        
         return vessel_x, vessel_z, vessel_ry, vessel_vx, vessel_vz, vessel_vry, ext_x, rot_ry
     # Get the position after a set time step
     def get_new_state(self):
@@ -52,11 +55,11 @@ class Env():
         vessel_vz = (vessel_z - self.state[1])*self.time_step
         vessel_vry = (vessel_ry - self.state[2])*self.time_step
 
-        ext_x = self.vessel.location[0]
+        ext_x = self.ext.location[0]
 
-        rot_ry = self.vessel.rotation_euler[0]
-        new_state = vessel_x, vessel_z, vessel_ry, vessel_vx, vessel_vz, vessel_vry, ext_x, rot_ry
-        return new_state
+        rot_ry = self.rot.rotation_euler[1]
+        
+        return vessel_x, vessel_z, vessel_ry, vessel_vx, vessel_vz, vessel_vry, ext_x, rot_ry
 
 # Function to change vessel,crane,reward based on this time step and confirmation with get_done()
     def step(self, action):
@@ -115,7 +118,9 @@ class Env():
     def get_reward(self):
         payload_loc = self.payload.matrix_world.translation
         target_loc = self.target.matrix_world.translation
-        return generate_euclidean_reward(target_loc, payload_loc)
+        euclidean_reward = generate_euclidean_reward(target_loc, payload_loc)
+        time_reward = -TIME_STEP
+        return euclidean_reward + time_reward
 
 # Check if the cycle is over
     def get_done(self):
@@ -124,10 +129,9 @@ class Env():
 
 # Generate the rendered picture and video
     def get_media(self,dir_name,episode):
-        #rendered_images = render_images(dir_name, episode)
-        #generated_vid = generate_video(dir_name, episode)
-        pass
-
+        render_images(dir_name, episode)
+        generate_video(dir_name, episode)
+        
 # Reset the environment and delete the objects for new episode
     def delete_all_objs(self):
         bpy.ops.object.select_all(action='SELECT')
