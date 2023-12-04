@@ -4,10 +4,6 @@ import os
 import bpy
 
 
-
-
-
-
 def render_images(dir_name, episode):
     """
     Calls the animated ship function and produces a set of images based on each frame
@@ -83,8 +79,6 @@ def generate_video(dir_name, episode, video_name=None):
     if not video_name:
         video_name = f'{dir_name}_{episode}.mp4'
 
-    #os.chdir(image_folder)
-
     # Takes out all of the images saved in the given folder and saves them in a list before sorting them
     images = [img for img in os.listdir(image_folder)
               if img.endswith(".jpg") or
@@ -118,3 +112,4 @@ if __name__ == '__main__':
 
 # Calling the generate_video function
     generate_video(dir_name, episode)
+
