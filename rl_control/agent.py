@@ -8,7 +8,7 @@ from keras.models import load_model
 class Agent():
     def __init__(self, lr, gamma, n_actions, epsilon, batch_size,
                   input_dims, epsilon_dec=0.9, epsilon_end=0.01,
-                  mem_size=10000, replace_target=100, fname='rl_control_model.h5'):
+                  mem_size=10000, replace_target=1800, fname='rl_control_model.h5'):
 
     #Dont train both networks
     #Only train the target network that you use to choose actions,
@@ -21,10 +21,10 @@ class Agent():
         self.epsilon_min = epsilon_end
         self.batch_size = batch_size
         self.replace_target = replace_target
-        self.model_file = fname
+        self.model_file = f'models/{fname}'
         self.memory = ReplayBuffer(mem_size, input_dims)
-        self.q_eval = create_dqn_model(lr, 8, 8, 8, n_actions, input_dims)
-        self.q_targ = create_dqn_model(lr, 8, 8, 8, n_actions, input_dims)
+        self.q_eval = create_dqn_model(lr, 64, 128, 64, n_actions, input_dims)
+        self.q_targ = create_dqn_model(lr, 64, 128, 64, n_actions, input_dims)
 
     #Stores the the ​state-action-reward
     def store_transition(self, state, action, reward, state_, done):
@@ -36,9 +36,21 @@ class Agent():
             action = np.random.choice(self.action_space)
         else:
             state = np.array([observation])
-            actions = self.q_eval.predict(state)
-            action = np.argmax(actions)
-
+            action_vals = self.q_eval.predict(state, verbose=0)
+            action = np.argmax(action_vals)
+        return action
+    
+    def get_action_values(self, action_idx):
+        actions = [[-1,-1],
+                    [-1,0],
+                    [-1,1],
+                    [0,-1],
+                    [0,0],
+                    [0,1],
+                    [1,-1],
+                    [1,0],
+                    [1,1]]
+        action = actions[action_idx]
         return action
 
     def learn(self):
@@ -55,13 +67,13 @@ class Agent():
             state, actions, rewards, state_, done = \
                                 self.memory.sample_buffer(self.batch_size)
 
-            action_values = np.array(self.action_space, dtype=np.int8)
-            action_indices = np.dot(actions, action_values)
+            #action_values = np.array(self.action_space, dtype=np.int8)
+            #action_indices = np.dot(actions, action_values)
 
-            q_next = self.q_target.predict(state_)
-            q_eval = self.q_eval.predict(state_)
+            q_next = self.q_targ.predict(state_, verbose=0)
+            q_eval = self.q_eval.predict(state_, verbose=0)
 
-            q_pred = self.q_eval.predict(state)
+            q_pred = self.q_eval.predict(state, verbose=0)
 
             max_actions = np.argmax(q_eval, axis=1)
 
@@ -72,7 +84,7 @@ class Agent():
             q_target[batch_index, actions] = rewards + \
                 self.gamma * q_next[batch_index, max_actions.astype(int)]*done
 
-            losses = self.q_eval.fit(state, q_target, verbose=0)
+            losses = self.q_eval.train_on_batch(state, q_target)
 
             if self.memory.mem_cntr % self.replace_target == 0:
                 self.update_network()
@@ -96,15 +108,3 @@ class Agent():
         if self.epsilon <= self.epsilon_min:
             self.update_network()
 
-
-# Choose an Action (translation and rotation)
-
-# Store our current transitions (state,action,reward,previous state) may need max limit
-
-# Learning function, use neural network/RL algorithm to update the model parameters
-
-# Function to update the model parameters
-
-# Save the model performance (e.g. every 100 eps )
-
-# Load the model

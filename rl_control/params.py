@@ -1,6 +1,6 @@
 import os
 
 ##################  VARIABLES  ##################
-TIME_STEP = float(os.environ.get("TIME_STEP"))
-ROTATE_INC = float(os.environ.get("ROTATE_INC"))
-TRANSLATE_INC = float(os.environ.get("TRANSLATE_INC"))
+TIME_STEP = 0.1
+ROTATE_INC = 0.4
+TRANSLATE_INC = 0.1

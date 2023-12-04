@@ -16,9 +16,9 @@ def create_dqn_model(lr, neurons_layer_1, neurons_layer_2, neurons_layer_3, n_ac
     # input_dims = 8
 
     model = keras.Sequential([
-            keras.layers.Dense(neurons_layer_1, activation='relu',input_dim = input_dims),
+            keras.layers.Dense(neurons_layer_1, activation='relu'),
             keras.layers.Dense(neurons_layer_2, activation='relu'),
-            keras.layers.Dense(neurons_layer_3, activation='relu'),
+            #keras.layers.Dense(neurons_layer_3, activation='relu'),
 
 
             keras.layers.Dense(n_actions, activation='linear')

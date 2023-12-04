@@ -7,6 +7,7 @@ import imageio
 
 
 
+
 def render_images(dir_name, episode):
     """
     Calls the animated ship function and produces a set of images based on each frame
@@ -23,9 +24,11 @@ def render_images(dir_name, episode):
     #animate_ship()
 
     # Creates a camera and positions the camera at a point to accurately view the object
-
+    bpy.ops.object.camera_add()
+    bpy.context.object.name = 'Camera'
     cam = bpy.data.objects['Camera']
 
+    bpy.context.scene.camera = cam
     # x_3d = 22
     # y_3d = -30
     # z_3d = 10
@@ -41,6 +44,13 @@ def render_images(dir_name, episode):
     cam.location = (x_2d,y_2d,z_2d)
     cam.rotation_euler  = (rx_2d,ry_2d,rz_2d)
 
+    # Sun Object
+    # lamp_data = bpy.data.lights.new(name="Lighting", type='AREA')
+    # lamp_data.energy = 1000
+    # lamp_object = bpy.data.objects.new(name="Lighting", object_data=lamp_data)
+    # lamp_object.location = (15.0, -15.0, 15.0)
+    bpy.ops.object.light_add()
+    bpy.context.object.name = 'Light'
 
     light = bpy.data.objects['Light']
     light.data.type = 'SUN'
@@ -87,7 +97,7 @@ def generate_video(dir_name, episode, video_name=None):
     height, width, layers = frame.shape
 
     # Sets up the video paramaters, such as the frame rate, the type of video and the size
-    fourcc = cv2.VideoWriter_fourcc(*'h264')
+    fourcc = cv2.VideoWriter_fourcc(*'MP4v')
     video = cv2.VideoWriter(video_name, fourcc, 10, (width, height))
 
     # For each image, it writes the image sequentially into the video to produce the video
@@ -98,27 +108,15 @@ def generate_video(dir_name, episode, video_name=None):
     video.release()
 
 
-def generate_gif():
-
-    abs_path = os.path.dirname(__file__)
-    image_folder = f'{abs_path}/renderings/{dir_name}/episode={episode}/'
-    images = [img for img in os.listdir(image_folder)
-              if img.endswith(".jpg") or
-                 img.endswith(".jpeg") or
-                 img.endswith("png")]
-    images = sorted(images)
-    imageio.mimsave(f'{abs_path}/renderings/{dir_name}/episode={episode}//movie.gif', images)
 
 if __name__ == '__main__':
 # Generate a model to test viedo creation
-    # import tests.test_modelling_and_wave
-
     dir_name = 'test_vid'
     episode = 0
 # Calling the render images before the video creation
-    #render_images(dir_name, episode)
+    render_images(dir_name, episode)
 
 # Calling the generate_video function
-    # generate_video(dir_name, episode)
+    generate_video(dir_name, episode)
 
-    generate_gif()
+
