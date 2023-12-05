@@ -8,10 +8,10 @@ import os
 def run_batch(run_name):
    
 
-   no_episodes = 5001
+   no_episodes = 1001
 
-   Hs_range = [1.5, 2.0, 2.5]
-   Tp_range = [5.0, 6.0, 7.0, 8.0, 9.0] #make global?
+   Hs_range = [2.5]
+   Tp_range = [5.0, 6.0, 7.0, 8.0, 9.0, 10.0] #make global?
    sim_time = 60 #make global?
 
    memory = {'state':[], 
@@ -21,7 +21,7 @@ def run_batch(run_name):
             'terminal':[]}
 
    lr = 0.001
-   epsilon_decay = 0.999
+   epsilon_decay = 0.995
 
    gamma = 0.99
    n_actions = 9 #make global?
@@ -39,6 +39,8 @@ def run_batch(run_name):
       Hs = np.random.choice(Hs_range)
       Tp = np.random.choice(Tp_range)
       seed = np.random.randint(0,1e6)
+      
+
 
       env = Env(sim_time, Hs, Tp, seed)
       
@@ -62,29 +64,36 @@ def run_batch(run_name):
          if env.frame % 10 == 0 or done:
             loss = agent.learn()
             
-            
+        
+        # if i > 1000:
+      agent.update_epsilon()
+               
 
       losses.append(loss)       
       scores.append(score)
-      
       avg_score = np.mean(scores[-100:])
-      avg_loss = np.mean(losses[-100:])
+      avg_loss = np.mean(losses[-100:])    
+      
+      
+      
+      if i % 25 == 0:
+         agent.model_save()
+      
+ 
+      if i % 100 == 0:
+         agent.model_save(episode=i)
+         pd.DataFrame(memory).to_csv(f'{agent.model_dir}/episode={i}/mem.csv')
+         #env.get_media(agent.model_dir,episode=i)
+         
+
       print('episode ', i, 'score %.1f' % score,
             'avg_score %.1f' % avg_score,
             'avg_loss %.1f' % avg_loss,
             'epsilon %.2f' % agent.epsilon)  
-      
-      # if i > 1000:
-      agent.update_epsilon()
-      
-      if i % 25 == 0:
-         agent.model_save()
-         abs_path = os.path.dirname(__file__)
-         pd.DataFrame(memory).to_csv(f'{abs_path}/../models/{run_name}/mem.csv')
-         env.get_media(run_name,i)
-         
 
    agent.model_save()
+   pd.DataFrame(memory).to_csv(f'{agent.model_dir}/episode=last/mem.csv')
+   #env.get_media(agent.model_dir)
    
 if __name__ == '__main__':
-   run_batch('test_run_andy_v5')
+   run_batch('full_run_05_12_23')
