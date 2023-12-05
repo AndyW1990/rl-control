@@ -37,6 +37,10 @@ def instantiate_model():
         bpy.context.object.rigid_body.linear_damping = 0
         bpy.context.object.rigid_body.angular_damping = 0
         bpy.context.object.rigid_body.friction = 0
+        # set a material to change
+        bpy.ops.object.material_slot_add()
+        bpy.context.object.active_material_index = 0
+        bpy.ops.material.new()   
         # return the object reference
         return bpy.context.object
 
@@ -47,20 +51,25 @@ def instantiate_model():
                                              location=(x, y, z))
         # rename the object
         bpy.context.object.name = obj_name
+        # set a material to change
+        bpy.ops.object.material_slot_add()
+        bpy.context.object.active_material_index = 0
+        bpy.ops.material.new()   
         # return the object reference
         return bpy.context.object
-
-    def create_circle(r, x, y, z, obj_name):
-        bpy.ops.mesh.primitive_circle_add(radius=r,
-                                          enter_editmode=False,
-                                          align='WORLD',
-                                          location=(x, y, z),
-                                          rotation=(np.pi/2,0,0))
-
+    
+    def create_torus(r1, r2, x, y, z, obj_name):
+        bpy.ops.mesh.primitive_torus_add(align='WORLD', location=(x, y, z), 
+        rotation=(np.pi/2, 0, 0), major_radius=r1, minor_radius=r1-r2)
         # rename the object
         bpy.context.object.name = obj_name
+        # set a material to change
+        bpy.ops.object.material_slot_add()
+        bpy.context.object.active_material_index = 0
+        bpy.ops.material.new()    
         # return the object reference
-        return bpy.context.object
+        return bpy.context.object   
+
 
     def create_empty(x, y, z, rx, ry, rz, obj_name):
 
@@ -86,6 +95,20 @@ def instantiate_model():
         bpy.context.object.rigid_body_constraint.object2 = bpy.data.objects[to_name]
 
         return bpy.context.object
+    
+    def set_material(obj, name, vals):
+        # Get material
+        mat = bpy.data.materials.get(name)
+        if mat is None:
+            # create material
+            mat = bpy.data.materials.new(name=name)
+            mat.use_nodes = True
+        
+        nodes = mat.node_tree.nodes
+        nodes["Principled BSDF"].inputs[0].default_value = vals
+
+        obj.data.materials[0] = mat
+        nodes["Principled BSDF"].inputs[0].keyframe_insert('default_value')
 
 
     #create body coordinate systems
@@ -96,11 +119,11 @@ def instantiate_model():
 
     #create bodies
     vessel = create_animated_cube(25, 10, 3, 0, 0, 0, 'Vessel')
-    pedestal = create_animated_cube(2, 2, 10, 0, 0, 0, 'Pedestal')
-    boom = create_animated_cube(12, 2, 2, 0, 0, 0, 'Boom')
-    extension = create_animated_cube(10, 2, 2, 0, 0, 0, 'Extension')
+    pedestal = create_animated_cube(1.5, 1.5, 10, 0, 0, 0, 'Pedestal')
+    boom = create_animated_cube(12, 1.5, 1.5, 0, 0, 0, 'Boom')
+    extension = create_animated_cube(10, 1, 1, 0, 0, 0, 'Extension')
     payload = create_sphere(1.25, 0, 0, 0, 'Payload')
-    target = create_sphere(2, 15, 0, 12.5, 'Target')
+    target = create_torus(2, 1.25, 15, 0, 12.5, 'Target')
 
     #create constraints
     temp_vessel_empty = create_empty(0, 0, 0, 0, 0, 0, 'Vessel Driver')
@@ -135,6 +158,17 @@ def instantiate_model():
     payload_obj =bpy.data.objects['Payload']
     target_obj =bpy.data.objects['Target']
     scene = bpy.context.scene
+    
+    #set target material
+    set_material(vessel, 'Vessel Material', (0.80, 0.0, 0.0, 1))
+    set_material(pedestal, 'Pedestal Material', (0.8, 0.5, 0.0, 1.0))
+    set_material(boom, 'Boom Material', (0.8, 0.5, 0.0, 1.0))
+    set_material(extension, 'Extension Material', (0.8, 0.5, 0.0, 1.0))
+    set_material(payload_obj, 'Payload Material', (0.0, 0.0, 0.0, 1.0))
+    set_material(target_obj, 'Target Material', (0.8, 0.8, 0.8, 1.0))
+
+    #set background blue
+    bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (0, 0.4, 0.8, 1)
 
 
     return vessel_obj,rot_obj,ext_obj,payload_obj,target_obj,scene

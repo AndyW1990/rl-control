@@ -118,6 +118,6 @@ class Agent():
         self.memory = pickle.load(file)   
         
         if self.epsilon <= self.epsilon_min:
-             self.q_targ = load_model(self.model_dir + self.model_file)
+             self.q_targ = load_model(f'{self.model_dir}/episode={episode}/{self.model_file}')
              
 

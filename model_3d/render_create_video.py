@@ -63,7 +63,7 @@ def render_images(directory, episode='last'):
         scene.render.fps = 10
         scene.render.ffmpeg.constant_rate_factor = 'LOW'
         scene.render.ffmpeg.ffmpeg_preset = 'REALTIME'
-        scene.render.filepath = directory
+        scene.render.filepath = image_folder
         bpy.ops.render.render(animation=True)
 
 
@@ -78,8 +78,7 @@ def generate_video(directory, episode='last', video_name='Sim_Vid'):
     """
     
     image_folder = f'{directory}/episode={episode}/renderings/'
-    if not video_name:
-        video_name = f'{video_name}.mp4'
+    video_name = f'{video_name}.mp4'
 
 
     # Takes out all of the images saved in the given folder and saves them in a list before sorting them
@@ -110,7 +109,7 @@ if __name__ == '__main__':
 # Generate a model to test viedo creation
     dir_name = 'test_vid'
 # Calling the render images before the video creation
-    render_images(dir_name)
+    #render_images(dir_name)
 
 # Calling the generate_video function
     generate_video(dir_name)
