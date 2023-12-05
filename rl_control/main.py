@@ -25,7 +25,7 @@ def run_batch(run_name):
    agent = Agent(lr, gamma, n_actions, epsilon, batch_size,
                      input_dims, run_name, epsilon_dec=epsilon_decay)
    #agent.model_load()
-
+   
    scores = []
    losses = []
    for i in range(no_episodes):
@@ -33,12 +33,10 @@ def run_batch(run_name):
       Hs = np.random.choice(Hs_range)
       Tp = np.random.choice(Tp_range)
       seed = np.random.randint(0,1e6)
-      
-
-
+   
       env = Env(sim_time, Hs, Tp, seed)
-      
       observation = env.state
+      
       score = 0
       done = False
       while not done:
