@@ -8,16 +8,16 @@ import bpy
 
 
 
-def render_images(dir_name, episode):
+def render_images(directory, episode='last'):
     """
     Calls the animated ship function and produces a set of images based on each frame
     produced throughout the model. It then saves each individual image into a seperate
     folder to be called again later.
     """
-    abs_path = os.path.dirname(__file__)
-    directory = f'{abs_path}/renderings/{dir_name}/episode={episode}/'
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+    
+    image_folder = f'{directory}/episode={episode}/renderings/'
+    if not os.path.exists(image_folder):
+        os.makedirs(image_folder)
 
     #abs_path = os.path.dirname(__file__)
     #rel_path = os.path.join(abs_path, '/renderings')
@@ -70,20 +70,17 @@ def render_images(dir_name, episode):
     # And finally select it make active
     # scene.objects.active = lamp_object
 
-def generate_video(dir_name, episode, video_name=None):
+def generate_video(directory, episode='last', video_name='Sim_Vid'):
     """
     Takes in all the image files in a ceration folder and from there, merges all of the images
     in order to produce a video at a set frame rate that is saved in the same folder as
     where the images are saved.
     """
-    # Sets the file locations and video name to be saved
-    abs_path = os.path.dirname(__file__)
-    image_folder = f'{abs_path}/renderings/{dir_name}/episode={episode}/'
-
+    
+    image_folder = f'{directory}/episode={episode}/renderings/'
     if not video_name:
-        video_name = f'{dir_name}_{episode}.mp4'
+        video_name = f'{video_name}.mp4'
 
-    #os.chdir(image_folder)
 
     # Takes out all of the images saved in the given folder and saves them in a list before sorting them
     images = [img for img in os.listdir(image_folder)
@@ -112,9 +109,8 @@ def generate_video(dir_name, episode, video_name=None):
 if __name__ == '__main__':
 # Generate a model to test viedo creation
     dir_name = 'test_vid'
-    episode = 0
 # Calling the render images before the video creation
-    render_images(dir_name, episode)
+    render_images(dir_name)
 
 # Calling the generate_video function
-    generate_video(dir_name, episode)
+    generate_video(dir_name)

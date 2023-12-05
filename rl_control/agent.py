@@ -5,6 +5,7 @@ from network import create_dqn_model
 import numpy as np
 from keras.models import load_model
 import pickle
+import os
 
 class Agent():
     def __init__(self, lr, gamma, n_actions, epsilon, batch_size,
@@ -22,12 +23,17 @@ class Agent():
         self.epsilon_min = epsilon_end
         self.batch_size = batch_size
         self.replace_target = replace_target
-        self.model_dir = f'models/{floc}/'
         self.model_file = 'rl_control_model'
         self.memory = ReplayBuffer(mem_size, input_dims)
         self.q_eval = create_dqn_model(lr, 64, 128, 64, n_actions, input_dims)
         self.q_targ = create_dqn_model(lr, 64, 128, 64, n_actions, input_dims)
 
+
+        abs_path = os.path.dirname(__file__)
+        self.model_dir = f'{abs_path}/../models/{floc}/'
+        if not os.path.exists(self.model_dir):
+            os.makedirs(self.model_dir)
+        
     #Stores the the ​state-action-reward
     def store_transition(self, state, action, reward, state_, done):
         self.memory.store_transition(state, action, reward, state_, done)
@@ -101,16 +107,17 @@ class Agent():
         self.q_targ.set_weights(self.q_eval.get_weights())
 
 
-    def model_save(self):
-        self.q_eval.save(self.model_dir + self.model_file)
-        file=open(self.model_dir + 'mem.pkl' ,"wb")            
+    def model_save(self, episode='last'):
+        self.q_eval.save(f'{self.model_dir}/episode={episode}/{self.model_file}')
+        file=open(f'{self.model_dir}/episode={episode}/mem.pkl' ,"wb")            
         pickle.dump(self.memory,file) 
 
-    def model_load(self):
-        self.q_eval = load_model(self.model_dir + self.model_file)
-        file=open(self.model_dir + 'mem.pkl')            
-        self.memory = pickle.load(open( file, "rb" ))   
+    def model_load(self, episode='last'):
+        self.q_eval = load_model(f'{self.model_dir}/episode={episode}/{self.model_file}')
+        file=open(f'{self.model_dir}/episode={episode}/mem.pkl', "rb")            
+        self.memory = pickle.load(file)   
         
         if self.epsilon <= self.epsilon_min:
              self.q_targ = load_model(self.model_dir + self.model_file)
+             
 
