@@ -5,10 +5,8 @@ import bpy
 
 
 
-
-
-
 def render_images(directory, episode='last'):
+
     """
     Calls the animated ship function and produces a set of images based on each frame
     produced throughout the model. It then saves each individual image into a seperate
@@ -109,7 +107,7 @@ if __name__ == '__main__':
 # Generate a model to test viedo creation
     dir_name = 'test_vid'
 # Calling the render images before the video creation
-    #render_images(dir_name)
-
+    render_images(dir_name)
 # Calling the generate_video function
     generate_video(dir_name)
+
