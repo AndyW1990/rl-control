@@ -69,6 +69,7 @@ class Env():
         self.move_crane(action)
         self.state =  self.get_new_state()
         self.reward = self.get_reward()
+        self.update_target()
         self.get_done()
 
         return self.state,self.reward,self.done
@@ -129,12 +130,27 @@ class Env():
 # Generate the rendered picture and video
     def get_media(self,model_dir, episode='last'):
         render_images(model_dir, episode)
-        generate_video(model_dir, episode, f'Sim_Vid_ep{episode}')
+        generate_video(model_dir, episode, f'Sim_Vid_ep={episode}')
         
 # Reset the environment and delete the objects for new episode
     def delete_all_objs(self):
         bpy.ops.object.select_all(action='SELECT')
         bpy.ops.object.delete(use_global=False, confirm=False)
+        
+    def update_target(self):
+        m = bpy.data.materials.get('Target Material')
+        nodes = m.node_tree.nodes
+        if -self.reward <= 0.35:
+            nodes["Principled BSDF"].inputs[0].default_value = (0.0, 0.80, 0.0, 1)
+        elif -self.reward > 0.35 and -self.reward <= 2.0:
+            nodes["Principled BSDF"].inputs[0].default_value = (0.80, 0.15, 0.0, 1)
+        elif -self.reward > 2.0:
+            nodes["Principled BSDF"].inputs[0].default_value = (0.80, 0.0, 0.0, 1)
+        else:
+            nodes["Principled BSDF"].inputs[0].default_value = (0.80, 0.80, 0.80, 1)
+
+        self.target.data.materials[0] = m
+        nodes["Principled BSDF"].inputs[0].keyframe_insert('default_value')
 
 if __name__ == '__main__':
     Hs = 2.5

@@ -2,7 +2,7 @@
 from rl_control.agent import Agent
 from rl_control.environment import Env
 from rl_control.params import * 
-
+import numpy as np
 
 def predict_model(sim_time, Hs, Tp, seed, floc, episode='last'):
 
@@ -23,12 +23,28 @@ def predict_model(sim_time, Hs, Tp, seed, floc, episode='last'):
         observation_, reward, done = env.step(action_value)
         score += reward
         observation = observation_
-        
-        
-    env.get_media(agent.model_dir,'predict')
+
+    env.get_media(agent.model_dir, episode)
     average_score = -score/sim_time*TIME_STEP
-    print(f'Hs:{Hs}m Tp:{Tp}s Seed:{seed} Score:{round(average_score,2)}m')  
-
-
+    print(f'Hs:{Hs}m Tp:{Tp}s Seed:{seed} Avg.Dist.:{round(average_score,2)}m')  
+    return (average_score)
+    
 if __name__ == '__main__':
-    predict_model(60, 3.0, 7.5, 19, 'test_run_andy_v5', episode=600)
+    model_folder = 'working_model'
+    
+    sim_time = 60
+    Hs = 2.5
+    Tp_range = [5.0, 6.0, 7.0, 8.0, 9.0, 10.0] #make global?
+    scores = []
+    Tps = []
+    seeds = []
+    for i in range(100,1001,100):
+        Tp = np.random.choice(Tp_range)
+        seed = np.random.randint(0,1e6)
+        score = predict_model(sim_time, Hs, Tp, seed, model_folder, episode=i)
+        scores.append(score)
+        Tps.append(Tp)
+        seeds.append(seed)
+    
+    for i in range(10):
+        print(f'Episode:{(i+1)*100} Hs:{Hs}m Tp:{Tps[i]}s Seed:{seeds[i]} Avg.Dist.:{round(scores[i],2)}m')  
