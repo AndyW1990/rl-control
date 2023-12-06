@@ -43,7 +43,7 @@ if __name__ == '__main__':
     Tp = 6.0
     seed = 19
     epsilon_decay = 0.995
-    episodes = [25, 50, 75]
+    episodes = [0, 50, 100, 300, 600]
     
     scores = []
     for i in episodes:
@@ -52,7 +52,7 @@ if __name__ == '__main__':
         else:
             epsilon = epsilon_decay**i
 
-        epsilon = 0.0 ##############  DELETE  #################
+        #epsilon = 0.0 ##############  DELETE  #################
         
         score = predict_model(sim_time, ramp_time, Hs, Tp, seed, 
                               model_folder, episode=i, epsilon=epsilon)
