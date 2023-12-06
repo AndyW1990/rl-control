@@ -1,14 +1,11 @@
-from rl_control.agent import Agent
-from rl_control.environment import Env
+from rl_agent.agent import Agent
+from rl_environment.environment import Env
 import numpy as np
-from datetime import datetime
-import pandas as pd
-import os
 
 def run_batch(run_name):
    
 
-   no_episodes = 1001
+   no_episodes = 501
 
    Hs_range = [2.5]
    Tp_range = [5.0, 6.0, 7.0, 8.0, 9.0, 10.0] #make global?
@@ -60,7 +57,7 @@ def run_batch(run_name):
       if i % 25 == 0:
          agent.model_save()
       
-      if i % 100 == 0:
+      if i % 25 == 0:
          agent.model_save(episode=i)
          #env.get_media(agent.model_dir,episode=i)
          
@@ -74,4 +71,4 @@ def run_batch(run_name):
    #env.get_media(agent.model_dir)
    
 if __name__ == '__main__':
-   run_batch('full_run_05_12_23')
+   run_batch('test_new_dir_tree')

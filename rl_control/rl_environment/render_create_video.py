@@ -3,8 +3,6 @@ import numpy as np
 import os
 import bpy
 
-
-
 def render_images(directory, episode='last'):
 
     """

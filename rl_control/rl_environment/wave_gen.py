@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import os
-import matplotlib.pyplot as plt
 from rl_control.params import *
 
 def generate_wave_train(Hs, Tp, seed, N=5000, r_min=0.5, r_max=10,
@@ -78,7 +77,7 @@ def interpolate_raos(target_freqs):
         Then use the RAO frequencies to interpolate the motions for our target frequency components
     '''
     abs_path = os.path.dirname(__file__)
-    rel_path = os.path.join(abs_path, '../raw_data/RAO.csv')
+    rel_path = os.path.join(abs_path, '../../raw_data/RAO.csv')
 
     #load the RAOs from csv
     df = pd.read_csv(rel_path)
