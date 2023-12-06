@@ -3,3 +3,4 @@ opencv-python
 tensorflow
 pandas
 streamlit
+bpy

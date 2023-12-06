@@ -1,10 +1,10 @@
 import numpy as np
 import bpy
-from rl_environment.wave_gen import generate_wave_train
-from rl_environment.create_model import instantiate_model
-from rl_environment.reward import generate_euclidean_reward
-from rl_environment.render_create_video import render_images,generate_video
-from params import *
+from rl_control.rl_environment.wave_gen import generate_wave_train
+from rl_control.rl_environment.create_model import instantiate_model
+from rl_control.rl_environment.reward import generate_euclidean_reward
+from rl_control.rl_environment.render_create_video import render_images,generate_video
+from rl_control.params import *
 
 
 class Env():
