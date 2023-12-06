@@ -1,6 +1,6 @@
 from tensorflow import keras
-from rl_agent.replaybuffer import ReplayBuffer
-from rl_agent.network import create_dqn_model
+from rl_control.rl_agent.replaybuffer import ReplayBuffer
+from rl_control.rl_agent.network import create_dqn_model
 import numpy as np
 from keras.models import load_model
 import pickle

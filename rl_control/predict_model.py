@@ -1,6 +1,6 @@
-from rl_agent.agent import Agent
-from rl_environment.environment import Env
-from params import * 
+from rl_control.rl_agent.agent import Agent
+from rl_control.rl_environment.environment import Env
+from rl_control.params import * 
 import numpy as np
 
 def predict_model(sim_time, ramp_time, Hs, Tp, seed, 

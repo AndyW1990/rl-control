@@ -1,5 +1,5 @@
-from rl_agent.agent import Agent
-from rl_environment.environment import Env
+from rl_control.rl_agent.agent import Agent
+from rl_control.rl_environment.environment import Env
 import numpy as np
 
 def run_batch(run_name):
