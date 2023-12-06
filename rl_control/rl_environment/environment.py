@@ -1,17 +1,14 @@
 import numpy as np
-import pandas as pd
-import os
 import bpy
-from rl_control.wave_gen import generate_wave_train
-from model_3d.create_model import instantiate_model
-from rl_control.reward import generate_euclidean_reward
-from rl_control.params import *
-from model_3d.render_create_video import render_images,generate_video
-
+from rl_environment.wave_gen import generate_wave_train
+from rl_environment.create_model import instantiate_model
+from rl_environment.reward import generate_euclidean_reward
+from rl_environment.render_create_video import render_images,generate_video
+from params import *
 
 
 class Env():
-    def __init__(self, sim_time, Hs, Tp, seed):
+    def __init__(self, sim_time, Hs, Tp, seed, ramp_time=10, rand_start=True):
 
         #delete any object in current scene
         self.delete_all_objs()
@@ -23,27 +20,30 @@ class Env():
         self.Tp = Tp
         self.seed = seed
         self.frame = 0
-        self.wave, self.surge, self.heave, self.pitch = self.generate_wave()
+        self.wave, self.surge, self.heave, self.pitch = self.generate_wave(ramp_time)
         self.sim_time = sim_time
         self.time_step = TIME_STEP
-        self.state = self.set_initial_state()
+        self.state = self.set_initial_state(rand_start)
         self.done = False
 
     # Generate the wave
-    def generate_wave(self):
-        return generate_wave_train(self.Hs, self.Tp, self.seed, ramp_time=10)
+    def generate_wave(self, ramp_time):
+        return generate_wave_train(self.Hs, self.Tp, self.seed, ramp_time=ramp_time)
 
     # Set initial zero position
-    def set_initial_state(self):
+    def set_initial_state(self, rand_start=True):
         vessel_x,_,vessel_z = self.vessel.location
         _,vessel_ry,_ = self.vessel.rotation_euler
         vessel_vx, vessel_vz = 0.0, 0.0
         vessel_vry = 0.0
-        
-        ext_x = (np.random.random()-0.5)*5
+        if rand_start:
+            ext_x = (np.random.random()-0.5)*5
+            rot_ry = (np.random.random()-0.5)*np.pi/4
+        else:
+            ext_x = -2.5
+            rot_ry = 22.5*np.pi/180
+            
         self.ext.location[0] = ext_x
-
-        rot_ry = (np.random.random()-0.5)*np.pi/4
         self.rot.rotation_euler[1] = rot_ry
         
         return vessel_x, vessel_z, vessel_ry, vessel_vx, vessel_vz, vessel_vry, ext_x, rot_ry
@@ -119,8 +119,8 @@ class Env():
     def get_reward(self):
         payload_loc = self.payload.matrix_world.translation
         target_loc = self.target.matrix_world.translation
-        euclidean_reward = generate_euclidean_reward(target_loc, payload_loc)
-        return euclidean_reward
+        reward = generate_euclidean_reward(target_loc, payload_loc)
+        return reward
 
 # Check if the cycle is over
     def get_done(self):
@@ -128,7 +128,7 @@ class Env():
             self.done = True
 
 # Generate the rendered picture and video
-    def get_media(self,model_dir, episode='last'):
+    def get_media(self, model_dir, episode='last'):
         render_images(model_dir, episode)
         generate_video(model_dir, episode, f'Sim_Vid_ep={episode}')
         
@@ -140,9 +140,9 @@ class Env():
     def update_target(self):
         m = bpy.data.materials.get('Target Material')
         nodes = m.node_tree.nodes
-        if -self.reward <= 0.35:
+        if -self.reward <= 0.5:
             nodes["Principled BSDF"].inputs[0].default_value = (0.0, 0.80, 0.0, 1)
-        elif -self.reward > 0.35 and -self.reward <= 2.0:
+        elif -self.reward > 0.5 and -self.reward <= 2.0:
             nodes["Principled BSDF"].inputs[0].default_value = (0.80, 0.15, 0.0, 1)
         elif -self.reward > 2.0:
             nodes["Principled BSDF"].inputs[0].default_value = (0.80, 0.0, 0.0, 1)

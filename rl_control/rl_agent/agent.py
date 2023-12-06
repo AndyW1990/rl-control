@@ -1,7 +1,6 @@
-from model_3d.create_model import instantiate_model
 from tensorflow import keras
-from replaybuffer import ReplayBuffer
-from network import create_dqn_model
+from rl_agent.replaybuffer import ReplayBuffer
+from rl_agent.network import create_dqn_model
 import numpy as np
 from keras.models import load_model
 import pickle
@@ -30,7 +29,7 @@ class Agent():
 
 
         abs_path = os.path.dirname(__file__)
-        self.model_dir = f'{abs_path}/../models/{floc}/'
+        self.model_dir = f'{abs_path}/../../models/{floc}/'
         if not os.path.exists(self.model_dir):
             os.makedirs(self.model_dir)
         
@@ -112,10 +111,11 @@ class Agent():
         file=open(f'{self.model_dir}/episode={episode}/mem.pkl' ,"wb")            
         pickle.dump(self.memory,file) 
 
-    def model_load(self, episode='last'):
+    def model_load(self, episode='last', predict=False):
         self.q_eval = load_model(f'{self.model_dir}/episode={episode}/{self.model_file}')
         file=open(f'{self.model_dir}/episode={episode}/mem.pkl', "rb")            
-        self.memory = pickle.load(file)   
+        if not predict:
+            self.memory = pickle.load(file)   
         
         if self.epsilon <= self.epsilon_min:
              self.q_targ = load_model(f'{self.model_dir}/episode={episode}/{self.model_file}')

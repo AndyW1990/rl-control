@@ -1,10 +1,10 @@
-
-from rl_control.agent import Agent
-from rl_control.environment import Env
-from rl_control.params import * 
+from rl_agent.agent import Agent
+from rl_environment.environment import Env
+from params import * 
 import numpy as np
 
-def predict_model(sim_time, Hs, Tp, seed, floc, episode='last', epsilon=0.0):
+def predict_model(sim_time, ramp_time, Hs, Tp, seed, 
+                  floc, episode='last', epsilon=0.0):
 
     lr = 0.0001
     gamma = 0.999
@@ -12,10 +12,12 @@ def predict_model(sim_time, Hs, Tp, seed, floc, episode='last', epsilon=0.0):
     n_actions = 9 #make global?
     input_dims = (8,) #make global?   
     
-    agent = Agent(lr, gamma, n_actions, epsilon, batch_size, input_dims, floc)
-    agent.model_load(episode)
+    agent = Agent(lr, gamma, n_actions, epsilon, 
+                  batch_size, input_dims, floc)
+    agent.model_load(episode, predict=True)
 
-    env = Env(sim_time, Hs, Tp, seed)
+    env = Env(sim_time, Hs, Tp, seed, 
+              ramp_time=ramp_time, rand_start=False)
 
     observation = env.state
     score = 0
@@ -36,22 +38,24 @@ if __name__ == '__main__':
     model_folder = 'working_model'
     
     sim_time = 20
+    ramp_time = 2
     Hs = 2.5
     Tp = 6.0
-    seed = 18
-    epsilon = 0.0
-    episodes = [0, 100, 500, 1000]
+    seed = 19
+    epsilon_decay = 0.995
+    episodes = [25, 50, 75]
     
     scores = []
     for i in episodes:
+        if i > 500:
+            epsilon = 0.0
+        else:
+            epsilon = epsilon_decay**i
+
+        epsilon = 0.0 ##############  DELETE  #################
         
-        # if i == 0:
-        #     epsilon = 1.0
-        # else:
-        #     epsilon = 0.0
-    
-        score = predict_model(sim_time, Hs, Tp, seed, model_folder, 
-                              episode=i, epsilon=epsilon)
+        score = predict_model(sim_time, ramp_time, Hs, Tp, seed, 
+                              model_folder, episode=i, epsilon=epsilon)
         scores.append(score)
     
     for i,ep in enumerate(episodes):
