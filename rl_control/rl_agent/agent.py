@@ -113,8 +113,8 @@ class Agent():
 
     def model_load(self, episode='last', predict=False):
         self.q_eval = load_model(f'{self.model_dir}/episode={episode}/{self.model_file}')
-        file=open(f'{self.model_dir}/episode={episode}/mem.pkl', "rb")            
-        if not predict:
+        if not predict:       
+            file=open(f'{self.model_dir}/episode={episode}/mem.pkl', "rb")            
             self.memory = pickle.load(file)   
         
         if self.epsilon <= self.epsilon_min:
