@@ -1,6 +1,6 @@
 from tensorflow import keras
-from rl_agent.replaybuffer import ReplayBuffer
-from rl_agent.network import create_dqn_model
+from rl_control.rl_agent.replaybuffer import ReplayBuffer
+from rl_control.rl_agent.network import create_dqn_model
 import numpy as np
 from keras.models import load_model
 import pickle
@@ -32,7 +32,7 @@ class Agent():
         self.model_dir = f'{abs_path}/../../models/{floc}/'
         if not os.path.exists(self.model_dir):
             os.makedirs(self.model_dir)
-        
+
     #Stores the the ​state-action-reward
     def store_transition(self, state, action, reward, state_, done):
         self.memory.store_transition(state, action, reward, state_, done)
@@ -46,7 +46,7 @@ class Agent():
             action_vals = self.q_eval.predict(state, verbose=0)
             action = np.argmax(action_vals)
         return action
-    
+
     def get_action_values(self, action_idx):
         actions = [[-1,-1],
                     [-1,0],
@@ -108,16 +108,14 @@ class Agent():
 
     def model_save(self, episode='last'):
         self.q_eval.save(f'{self.model_dir}/episode={episode}/{self.model_file}')
-        file=open(f'{self.model_dir}/episode={episode}/mem.pkl' ,"wb")            
-        pickle.dump(self.memory,file) 
+        file=open(f'{self.model_dir}/episode={episode}/mem.pkl' ,"wb")
+        pickle.dump(self.memory,file)
 
     def model_load(self, episode='last', predict=False):
         self.q_eval = load_model(f'{self.model_dir}/episode={episode}/{self.model_file}')
-        file=open(f'{self.model_dir}/episode={episode}/mem.pkl', "rb")            
+        file=open(f'{self.model_dir}/episode={episode}/mem.pkl', "rb")
         if not predict:
-            self.memory = pickle.load(file)   
-        
+            self.memory = pickle.load(file)
+
         if self.epsilon <= self.epsilon_min:
              self.q_targ = load_model(f'{self.model_dir}/episode={episode}/{self.model_file}')
-             
-
