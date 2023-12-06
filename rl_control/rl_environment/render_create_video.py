@@ -10,7 +10,7 @@ def render_images(directory, episode='last'):
     produced throughout the model. It then saves each individual image into a seperate
     folder to be called again later.
     """
-    
+
     image_folder = f'{directory}/episode={episode}/renderings/'
     if not os.path.exists(image_folder):
         os.makedirs(image_folder)
@@ -20,8 +20,9 @@ def render_images(directory, episode='last'):
     #animate_ship()
 
     # Creates a camera and positions the camera at a point to accurately view the object
-    bpy.ops.object.camera_add()
-    bpy.context.object.name = 'Camera'
+    ##### THESE LINES
+    # bpy.ops.object.camera_add()
+    # bpy.context.object.name = 'Camera'
     cam = bpy.data.objects['Camera']
 
     bpy.context.scene.camera = cam
@@ -45,8 +46,10 @@ def render_images(directory, episode='last'):
     # lamp_data.energy = 1000
     # lamp_object = bpy.data.objects.new(name="Lighting", object_data=lamp_data)
     # lamp_object.location = (15.0, -15.0, 15.0)
-    bpy.ops.object.light_add()
-    bpy.context.object.name = 'Light'
+
+    ##### THESE LINES
+    # bpy.ops.object.light_add()
+    # bpy.context.object.name = 'Light'
 
     light = bpy.data.objects['Light']
     light.data.type = 'SUN'
@@ -72,7 +75,7 @@ def generate_video(directory, episode='last', video_name='Sim_Vid'):
     in order to produce a video at a set frame rate that is saved in the same folder as
     where the images are saved.
     """
-    
+
     image_folder = f'{directory}/episode={episode}/renderings/'
     video_name = f'{video_name}.mp4'
 
@@ -108,4 +111,3 @@ if __name__ == '__main__':
     render_images(dir_name)
 # Calling the generate_video function
     generate_video(dir_name)
-

@@ -42,10 +42,10 @@ class Env():
         else:
             ext_x = -2.5
             rot_ry = 22.5*np.pi/180
-            
+
         self.ext.location[0] = ext_x
         self.rot.rotation_euler[1] = rot_ry
-        
+
         return vessel_x, vessel_z, vessel_ry, vessel_vx, vessel_vz, vessel_vry, ext_x, rot_ry
     # Get the position after a set time step
     def get_new_state(self):
@@ -58,7 +58,7 @@ class Env():
         ext_x = self.ext.location[0]
 
         rot_ry = self.rot.rotation_euler[1]
-        
+
         return vessel_x, vessel_z, vessel_ry, vessel_vx, vessel_vz, vessel_vry, ext_x, rot_ry
 
 # Function to change vessel,crane,reward based on this time step and confirmation with get_done()
@@ -131,12 +131,12 @@ class Env():
     def get_media(self, model_dir, episode='last'):
         render_images(model_dir, episode)
         generate_video(model_dir, episode, f'Sim_Vid_ep={episode}')
-        
+
 # Reset the environment and delete the objects for new episode
     def delete_all_objs(self):
         bpy.ops.object.select_all(action='SELECT')
         bpy.ops.object.delete(use_global=False, confirm=False)
-        
+
     def update_target(self):
         m = bpy.data.materials.get('Target Material')
         nodes = m.node_tree.nodes

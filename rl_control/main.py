@@ -3,7 +3,7 @@ from rl_control.rl_environment.environment import Env
 import numpy as np
 
 def run_batch(run_name):
-   
+
 
    no_episodes = 501
 
@@ -22,18 +22,18 @@ def run_batch(run_name):
    agent = Agent(lr, gamma, n_actions, epsilon, batch_size,
                      input_dims, run_name, epsilon_dec=epsilon_decay)
    #agent.model_load()
-   
+
    scores = []
    losses = [] 
    for i in range(no_episodes):
-         
+
       Hs = np.random.choice(Hs_range)
       Tp = np.random.choice(Tp_range)
       seed = np.random.randint(0,1e6)
-   
+
       env = Env(sim_time, Hs, Tp, seed)
       observation = env.state
-      
+
       score = 0
       done = False
       while not done:
@@ -45,30 +45,30 @@ def run_batch(run_name):
          observation = observation_
          if env.frame % 10 == 0 or done:
             loss = agent.learn()
-      
-      #if i > 500:      
+
+      #if i > 500:
       agent.update_epsilon()
-               
-      losses.append(loss)       
+
+      losses.append(loss)
       scores.append(score)
       avg_score = np.mean(scores[-100:])
-      avg_loss = np.mean(losses[-100:])    
+      avg_loss = np.mean(losses[-100:])
 
       if i % 25 == 0:
          agent.model_save()
-      
+
       if i % 25 == 0:
          agent.model_save(episode=i)
          #env.get_media(agent.model_dir,episode=i)
-         
+
 
       print('episode ', i, 'score %.1f' % score,
             'avg_score %.1f' % avg_score,
             'avg_loss %.1f' % avg_loss,
-            'epsilon %.2f' % agent.epsilon)  
+            'epsilon %.2f' % agent.epsilon)
 
    agent.model_save()
    #env.get_media(agent.model_dir)
-   
+
 if __name__ == '__main__':
    run_batch('test_new_dir_tree')
