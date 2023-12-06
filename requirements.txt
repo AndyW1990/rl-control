@@ -1,5 +1,13 @@
-notebook
+# Operational
 opencv-python
 tensorflow
 pandas
+bpy
+
+# Deployment
 streamlit
+fastapi
+uvicorn
+
+# Development
+# notebook
