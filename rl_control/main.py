@@ -24,7 +24,7 @@ def run_batch(run_name):
    #agent.model_load()
 
    scores = []
-   losses = []
+   losses = [] 
    for i in range(no_episodes):
 
       Hs = np.random.choice(Hs_range)
