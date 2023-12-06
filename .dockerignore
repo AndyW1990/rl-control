@@ -1,0 +1,10 @@
+notebooks/
+*.egg-info/
+tests/
+.env
+.envrc
+.gitignore
+.envsample
+.python-version
+Makefile
+README.md
