@@ -29,7 +29,7 @@ def predict_model(sim_time, ramp_time, Hs, Tp, seed,
         score += reward
         observation = observation_
 
-    env.get_media(agent.model_dir, episode)
+    #env.get_media(agent.model_dir, episode)
     average_score = -score/sim_time*TIME_STEP
     print(f'Hs:{Hs}m Tp:{Tp}s Seed:{seed} Avg.Dist.:{round(average_score,2)}m')  
     return average_score
@@ -39,24 +39,21 @@ if __name__ == '__main__':
     
     sim_time = 20
     ramp_time = 2
-    Hs = 2.5
-    Tp = 6.0
+    Hs_range = [1.5, 2.5, 3.5]
+    Tp_range = [5.0, 7.5, 10.0]
     seed = 19
-    epsilon_decay = 0.995
-    episodes = [0, 50, 100, 300, 600]
+    epsilon = 0
+    episode = 1300
     
     scores = []
-    for i in episodes:
-        if i > 500:
-            epsilon = 0.0
-        else:
-            epsilon = epsilon_decay**i
-
-        #epsilon = 0.0 ##############  DELETE  #################
-        
-        score = predict_model(sim_time, ramp_time, Hs, Tp, seed, 
-                              model_folder, episode=i, epsilon=epsilon)
-        scores.append(score)
+    for Hs in Hs_range:
+        for Tp in Tp_range:
+            score = predict_model(sim_time, ramp_time, Hs, Tp, seed, 
+                                model_folder, episode=episode, epsilon=epsilon)
+            scores.append(score)
     
-    for i,ep in enumerate(episodes):
-         print(f'Episode:{ep} Hs:{Hs}m Tp:{Tp}s Seed:{seed} Avg.Dist.:{round(scores[i],2)}m')  
+    i = 0
+    for Hs in Hs_range:
+        for Tp in Tp_range:
+            print(f'Hs:{Hs}m Tp:{Tp}s Seed:{seed} Avg.Dist.:{round(scores[i],2)}m') 
+            i += 1 
