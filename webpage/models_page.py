@@ -7,10 +7,10 @@ def page3():
     st.markdown("<h1 style='text-align: center;'>Model Demo</h1>", unsafe_allow_html=True)
     st.write('---')
     st.write('Choose a wave height (Hs)     and period (Tp) to show the response to a randomly generated (irregular) wave.')
-    #if 'height' not in st.session_state:
-    st.session_state['height'] = '1.5m'
-    #if 'period' not in st.session_state:
-    st.session_state['period'] = '5.0s'
+    if 'height' not in st.session_state:
+        st.session_state['height'] = '1.5'
+    if 'period' not in st.session_state:
+        st.session_state['period'] = '5.0'
 
 
     st.sidebar.subheader('Choose Wave Height')
@@ -20,11 +20,11 @@ def page3():
     b3 = h3.button('3.5m')
 
     if b1:
-        st.session_state['height'] = '1.5m'
+        st.session_state['height'] = '1.5'
     elif b2:
-        st.session_state['height'] = '2.5m'
+        st.session_state['height'] = '2.5'
     elif b3:
-        st.session_state['height'] = '3.5m'
+        st.session_state['height'] = '3.5'
 
     st.sidebar.subheader('Choose Wave Period')
     p1, p2, p3 = st.sidebar.columns(3)
@@ -33,11 +33,11 @@ def page3():
     b6 = p3.button('10.0s')
 
     if b4:
-        st.session_state['period'] = '5.0s'
+        st.session_state['period'] = '5.0'
     elif b5:
-        st.session_state['period'] = '7.5s'
+        st.session_state['period'] = '7.5'
     elif b6:
-        st.session_state['period'] = '10.0s'
+        st.session_state['period'] = '10.0'
 
 
     st.sidebar.title('Parameters for the model:')
@@ -48,6 +48,6 @@ def page3():
     p.write(st.session_state.period)
 
     abs_path = os.path.dirname(__file__)
-    vid_path = f"{abs_path}/for_web/Sim_Vid_ep={st.session_state['height']}_{st.session_state['period']}.mp4"
-    st.subheader(f"Wave of Height {st.session_state['height']} and Period {st.session_state['period']}")
+    vid_path = f"{abs_path}/for_web/Sim_Vid_ep={st.session_state['height']}m_{st.session_state['period']}s.mp4"
+    st.subheader(f"Wave of Height {st.session_state['height']}m and Period {st.session_state['period']}s")
     st.video(vid_path, format = 'video/mp4', start_time=0)
