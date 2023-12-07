@@ -128,9 +128,14 @@ class Env():
             self.done = True
 
 # Generate the rendered picture and video
-    def get_media(self, model_dir, episode='last'):
-        render_images(model_dir, episode)
-        generate_video(model_dir, episode, f'Sim_Vid_ep={episode}')
+    def get_media(self, render_loc, episode='last'):
+        abs_path = os.path.dirname(__file__)
+        render_dir = f'{abs_path}/../../renderings/{render_loc}/'
+        if not os.path.exists(render_dir):
+            os.makedirs(render_dir)
+        
+        render_images(render_loc, episode)
+        generate_video(render_loc, episode, f'Sim_Vid_ep={episode}')
 
 # Reset the environment and delete the objects for new episode
     def delete_all_objs(self):

@@ -4,7 +4,7 @@ from rl_control.params import *
 import numpy as np
 
 def predict_model(sim_time, ramp_time, Hs, Tp, seed,
-                  floc, episode='last', epsilon=0.0):
+                  folder_name, episode='last', epsilon=0.0):
 
     lr = 0.0001
     gamma = 0.999
@@ -13,7 +13,7 @@ def predict_model(sim_time, ramp_time, Hs, Tp, seed,
     input_dims = (8,) #make global?
 
     agent = Agent(lr, gamma, n_actions, epsilon,
-                  batch_size, input_dims, floc)
+                  batch_size, input_dims, folder_name)
     agent.model_load(episode, predict=True)
 
     env = Env(sim_time, Hs, Tp, seed,
@@ -29,7 +29,7 @@ def predict_model(sim_time, ramp_time, Hs, Tp, seed,
         score += reward
         observation = observation_
 
-    #env.get_media(agent.model_dir, episode)
+    env.get_media(folder_name, episode)
     average_score = -score/sim_time*TIME_STEP
     print(f'Hs:{Hs}m Tp:{Tp}s Seed:{seed} Avg.Dist.:{round(average_score,2)}m')
     return average_score
@@ -39,9 +39,9 @@ if __name__ == '__main__':
 
     sim_time = 20
     ramp_time = 2
-    Hs_range = [1.5, 2.5, 3.5]
-    Tp_range = [5.0, 7.5, 10.0]
-    seed = 19
+    Hs = 4.0
+    Tp = 6.0
+    seed = 20
     epsilon_decay = 0.995
     episodes = [600]
 

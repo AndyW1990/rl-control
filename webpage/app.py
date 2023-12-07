@@ -1,15 +1,19 @@
 import streamlit as st
 from home_page import page1
-from models_page import page2
-from training_page import page3
+from training_page import page2
+from models_page import page3
+from demo_page import page4
+from limitations_page import page5
 
-st.set_page_config(page_title="Crane Balancing with Machine Learning", layout="wide")
+st.set_page_config(page_title="Motion Compensated Crane with Machine Learning", layout="wide")
 
 
 pages = {
     "Home": page1,
-    "Models": page2,
-    "Training Evolution": page3
+    "Training Evolution": page2,    
+    "Model Demo": page3,
+    "Live Demo": page4,
+    "Limitations": page5
 }
 
 # Sidebar for navigation

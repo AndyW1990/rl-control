@@ -170,5 +170,10 @@ def instantiate_model():
     #set background blue
     bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (0, 0.4, 0.8, 1)
 
+    bpy.ops.object.camera_add()
+    bpy.context.object.name = 'Camera'   
+    
+    bpy.ops.object.light_add()
+    bpy.context.object.name = 'Light'    
 
     return vessel_obj,rot_obj,ext_obj,payload_obj,target_obj,scene

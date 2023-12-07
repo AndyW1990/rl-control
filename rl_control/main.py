@@ -2,7 +2,7 @@ from rl_control.rl_agent.agent import Agent
 from rl_control.rl_environment.environment import Env
 import numpy as np
 
-def run_batch(run_name):
+def run_batch(folder_name):
 
 
    no_episodes = 501
@@ -20,7 +20,7 @@ def run_batch(run_name):
    batch_size = 128
    input_dims = (8,) #make global?
    agent = Agent(lr, gamma, n_actions, epsilon, batch_size,
-                     input_dims, run_name, epsilon_dec=epsilon_decay)
+                     input_dims, folder_name, epsilon_dec=epsilon_decay)
    #agent.model_load()
 
    scores = []
@@ -59,7 +59,7 @@ def run_batch(run_name):
 
       if i % 25 == 0:
          agent.model_save(episode=i)
-         #env.get_media(agent.model_dir,episode=i)
+         #env.get_media(folder_name,episode=i)
 
 
       print('episode ', i, 'score %.1f' % score,
@@ -68,7 +68,7 @@ def run_batch(run_name):
             'epsilon %.2f' % agent.epsilon)
 
    agent.model_save()
-   #env.get_media(agent.model_dir)
+   #env.get_media(folder_name)
 
 if __name__ == '__main__':
    run_batch('test_new_dir_tree')

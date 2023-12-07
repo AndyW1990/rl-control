@@ -3,12 +3,14 @@ import numpy as np
 import os
 
 
-def page2():
-
+def page3():
+    st.markdown("<h1 style='text-align: center;'>Model Demo</h1>", unsafe_allow_html=True)
+    st.write('---')
+    st.write('Choose a wave height (Hs) and period (Tp) to show the response to a randomly generated (irregular) wave.')
     if 'height' not in st.session_state:
-        st.session_state['height'] = 'Pick a Height'
+        st.session_state['height'] = '1.5m'
     if 'period' not in st.session_state:
-        st.session_state['period'] = 'Pick a Period'
+        st.session_state['period'] = '5.0s'
 
 
     st.sidebar.subheader('Choose Wave Height')
