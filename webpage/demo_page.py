@@ -30,7 +30,7 @@ def page4():
     p.write(st.session_state.period)
 
     if b1:
-        time.sleep(10)
+        time.sleep(5)
         abs_path = os.path.dirname(__file__)
         vid_path = f"{abs_path}/for_web/Sim_Vid_ep={st.session_state['height']}m_{st.session_state['period']}s.mp4"
         st.subheader(f"Wave of Height {st.session_state['height']}m and Period {st.session_state['period']}s")
