@@ -85,7 +85,7 @@ def generate_video(directory, episode='last', video_name='Sim_Vid'):
     height, width, layers = frame.shape
 
     # Sets up the video paramaters, such as the frame rate, the type of video and the size
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    fourcc = cv2.VideoWriter_fourcc(*'H264')
     video = cv2.VideoWriter(image_folder + video_name, fourcc, 10, (width, height))
 
     # For each image, it writes the image sequentially into the video to produce the video
