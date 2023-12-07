@@ -134,8 +134,8 @@ class Env():
         if not os.path.exists(render_dir):
             os.makedirs(render_dir)
         
-        render_images(render_loc, episode)
-        generate_video(render_loc, episode, f'Sim_Vid_ep={episode}')
+        render_images(render_dir, episode)
+        generate_video(render_dir, episode, f'Sim_Vid_ep={episode}')
 
 # Reset the environment and delete the objects for new episode
     def delete_all_objs(self):
