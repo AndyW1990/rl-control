@@ -15,12 +15,13 @@ def page1():
     bul,img = st.columns(2)
     with bul:
         st.markdown("""
-        <div style='margin-top: 50px; text-align: left;'>
+        <div style='margin-top: 0px; text-align: left;'>
             <ul style='list-style-position: inside;'>
-                <li style='font-size: 18px;'>Proving that machine learning can be used<br>for engineering control tasks</li>
-                <li style='font-size: 18px;'>Simulating true vessel motion on waves</li>
-                <li style='font-size: 18px;'>Creating a motion compensating crane</li>
-                <li style='font-size: 18px;'>Using a DQN to train the agent</li>
+                <li style='font-size: 18px;'>Proof of concept for machine learning in<br><pre>engineering control tasks</li>
+                <li style='font-size: 18px;'>Simulating wave induced vessel motion<br><pre>in 3 degrees of freedom</li>
+                <li style='font-size: 18px;'>Environment created in Python with Blender<pre></li>
+                <li style='font-size: 18px;'>Using Reinforcement Learning to control<br><pre>a crane with 2 degeres of freedom</li>
+                <li style='font-size: 18px;'>A Double DQN is used to train the Agent</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
@@ -29,15 +30,3 @@ def page1():
         st.image(f'{img_path}', width=500)
 
     st.write('---')
-    st.markdown("<h3 style='text-align: center;'>Limitations and Improvements</h3>", unsafe_allow_html=True)
-
-    st.markdown("""
-            <div style='margin-top: 50px; text-align: center;'>
-                <ul style='list-style-position: inside;'>
-                    <li style='font-size: 18px;'>Attempt to use a continuous action space</li>
-                    <li style='font-size: 18px;'>Increase the degrees of freedom from 3 to 6</li>
-                    <li style='font-size: 18px;'>Use a force based approach</li>
-                    <li style='font-size: 18px;'>Include other external factors such as wind</li>
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)

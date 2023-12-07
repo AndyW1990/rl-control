@@ -8,7 +8,7 @@ import os
 
 class Agent():
     def __init__(self, lr, gamma, n_actions, epsilon, batch_size,
-                  input_dims, floc, epsilon_dec=0.9, epsilon_end=0.01,
+                  input_dims, model_loc, epsilon_dec=0.9, epsilon_end=0.01,
                   mem_size=10000, replace_target=1800):
 
     #Dont train both networks
@@ -29,7 +29,7 @@ class Agent():
 
 
         abs_path = os.path.dirname(__file__)
-        self.model_dir = f'{abs_path}/../../models/{floc}/'
+        self.model_dir = f'{abs_path}/../../models/{model_loc}/'
         if not os.path.exists(self.model_dir):
             os.makedirs(self.model_dir)
 

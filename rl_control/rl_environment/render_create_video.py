@@ -20,9 +20,6 @@ def render_images(directory, episode='last'):
     #animate_ship()
 
     # Creates a camera and positions the camera at a point to accurately view the object
-    ##### THESE LINES
-    # bpy.ops.object.camera_add()
-    # bpy.context.object.name = 'Camera'
     cam = bpy.data.objects['Camera']
 
     bpy.context.scene.camera = cam
@@ -46,10 +43,6 @@ def render_images(directory, episode='last'):
     # lamp_data.energy = 1000
     # lamp_object = bpy.data.objects.new(name="Lighting", object_data=lamp_data)
     # lamp_object.location = (15.0, -15.0, 15.0)
-
-    ##### THESE LINES
-    # bpy.ops.object.light_add()
-    # bpy.context.object.name = 'Light'
 
     light = bpy.data.objects['Light']
     light.data.type = 'SUN'
@@ -92,7 +85,7 @@ def generate_video(directory, episode='last', video_name='Sim_Vid'):
     height, width, layers = frame.shape
 
     # Sets up the video paramaters, such as the frame rate, the type of video and the size
-    fourcc = cv2.VideoWriter_fourcc(*'H264')
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     video = cv2.VideoWriter(image_folder + video_name, fourcc, 10, (width, height))
 
     # For each image, it writes the image sequentially into the video to produce the video
