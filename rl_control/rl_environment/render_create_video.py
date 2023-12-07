@@ -11,7 +11,7 @@ def render_images(directory, episode='last'):
     folder to be called again later.
     """
 
-    image_folder = f'{directory}/episode={episode}/renderings/'
+    image_folder = f'{directory}/episode={episode}/'
     if not os.path.exists(image_folder):
         os.makedirs(image_folder)
 
@@ -69,7 +69,7 @@ def generate_video(directory, episode='last', video_name='Sim_Vid'):
     where the images are saved.
     """
 
-    image_folder = f'{directory}/episode={episode}/renderings/'
+    image_folder = f'{directory}/episode={episode}/'
     video_name = f'{video_name}.mp4'
 
 
