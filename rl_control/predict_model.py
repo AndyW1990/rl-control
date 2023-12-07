@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     sim_time = 20
     ramp_time = 2
-    Hs = 4.0
+    Hs = 3.5
     Tp = 6.0
     seed = 20
     epsilon_decay = 0.995
