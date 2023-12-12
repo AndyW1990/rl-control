@@ -1,40 +1,18 @@
-# rl-control
-##Reinforcement Learning Control - Motion Compensated Crane Aboard a Ship
+# Reinforcement Learning Control
+## Motion Compensated Crane Aboard a Ship
 
-##training flow:
-select number of episodes\
-select simulation time per episode (60s?)\
-select timestep (0.1s? to start with)\
-select hyperparameters for NN\
-load agent/model if not fresh train\
-load 3d model\
-set scores = []\
-  &emsp;for each episode:\
-    &emsp;&emsp;select wave parameters\
-    &emsp;&emsp;generate wave train from function\
-    &emsp;&emsp;set score = 0 (score is accumulaiton of rewards)\
-    &emsp;&emsp;set done = False (done = True when sim_time reached or set early stop if score = terrible)\
-    &emsp;&emsp;set initial state\
-    &emsp;&emsp;time = 0\
-    &emsp;&emsp;while not done:\
-        &emsp;&emsp;&emsp;generate action from state\
-        &emsp;&emsp;&emsp;take 1 step with wave train and:\
-          &emsp;&emsp;&emsp;&emsp;get new_state, reward, done from env\
-        &emsp;&emsp;&emsp;score += reward\
-        &emsp;&emsp;&emsp;cache state, new_state, action, reward, done\
-        &emsp;&emsp;&emsp;set (current) state = new_state\
-        &emsp;&emsp;&emsp;model.learn (have model update params after each action or every x actions)\
-        &emsp;&emsp;&emsp;time += timestep\
-        &emsp;&emsp;&emsp;if time = sim_time: done = True\
-    &emsp;&emsp;scores = append(score)\
-    &emsp;&emsp;print info on episode, score and avarage scores\
+![RL Control Crane](https://rl-control-xq2k2a7fzyrowkuptwl6yn.streamlit.app/~/+/media/c883a3444cd1c2225f4b5de146ea798983c98babdeea9799e6f763c2.png)
 
-save model etc after training
+### About the Project
+- Proof of concept for machine learning in engineering control tasks
+- Simulating wave induced vessel motion in 3 degrees of freedom
+- Environment created in Python with Blender
+- Using Reinforcement Learning to control a crane with 2 degeres of freedom
+- A Double DQN is used to train the Agent
 
-###################################
 
-<!-- NOTES
 
+<!-- Notes
 ######## INPUTS ##########
 
 - X no. of episodes
@@ -110,4 +88,4 @@ No. of NNs: 2
 We will introduce an, $\epsilon$, to introduce randomness into the model, the degree of randomness diminishes the greater amount of training is done.
 - This is done to encourage exploration and avoid getting stuck in a local minima.
 - Its important to understand that the model knows nothing to start with. If u don’t explore to start it could just continue down an incorrect path with limited ability.
-- Thats why ensuring enough episodes is vital otherwise it wont have seen enough data to learn the correct actions. --> -->
+- Thats why ensuring enough episodes is vital otherwise it wont have seen enough data to learn the correct actions. -->
