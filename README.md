@@ -5,10 +5,30 @@
 
 ### About the Project
 - Proof of concept for machine learning in engineering control tasks
-- Simulating wave induced vessel motion in 3 degrees of freedom
+- Simulating wave induced vessel motion in 3 degrees of freedom (DoF)
 - Environment created in Python with Blender
-- Using Reinforcement Learning to control a crane with 2 degeres of freedom
+- Using Reinforcement Learning to control a crane with 2 DoF
 - A Double DQN is used to train the Agent
+
+
+# Model Evolution
+## Baseline Model
+The baseline model assumes the crane is locked in rotation and extension
+![Baseline Model](https://rl-control-xq2k2a7fzyrowkuptwl6yn.streamlit.app/~/+/media/636bcc856c19355813ad386ec5f64dd3e538c8edc04d55ddb2f0f36b.gif)
+
+## Progression through Episodes
+### Episode 0:
+![Episode 0](https://rl-control-xq2k2a7fzyrowkuptwl6yn.streamlit.app/~/+/media/9f851a0b9e1bf73944c6776ff6edc7ab70b07e995d0f9eec2c43b716.gif)
+
+### Episode 50:
+![Episode 50](https://rl-control-xq2k2a7fzyrowkuptwl6yn.streamlit.app/~/+/media/e5b9144423242289811a6d182f3fc15e016ab1c7cd5b8ac46a344850.gif)
+
+### Episode 100:
+![Episode 100](https://rl-control-xq2k2a7fzyrowkuptwl6yn.streamlit.app/~/+/media/c4377ab17248b6f270629e2fc02420c8de3354be10806357646f7c10.gif)
+
+### Episode 600:
+![BEpisode 600](https://rl-control-xq2k2a7fzyrowkuptwl6yn.streamlit.app/~/+/media/19769bd28381c51ccd66abc2f822651e863e960ee430d726ab79fec7.gif)
+
 
 
 
