@@ -11,6 +11,10 @@ import numpy as np
 
 
 def instantiate_model():
+    '''
+    functions to create blender vessel and crane objects
+    returns objects for manipulation by environment
+    '''
     def delete_object(name):
         # try to find the object by name
         if name in bpy.data.objects:
@@ -20,12 +24,14 @@ def instantiate_model():
             bpy.ops.object.delete(use_global=False)
 
 
-    def create_animated_cube(l, b, t, x, y, z, obj_name):
+    def create_animated_cube(l, b, d, x, y, z, obj_name):
+        #create cube object and make animated true
+        #with length, breadth, depth, location and name
         bpy.ops.mesh.primitive_cube_add(
             size=1,
             location=(x, y, z),
             rotation=(0, 0, 0),
-            scale=(l, b, t)
+            scale=(l, b, d)
         )
         # rename the object
         bpy.context.object.name = obj_name
@@ -45,6 +51,7 @@ def instantiate_model():
         return bpy.context.object
 
     def create_sphere(r, x, y, z, obj_name):
+        #create sphere with radius, location and name
         bpy.ops.mesh.primitive_uv_sphere_add(radius=r,
                                              enter_editmode=False,
                                              align='WORLD',
@@ -59,6 +66,7 @@ def instantiate_model():
         return bpy.context.object
     
     def create_torus(r1, r2, x, y, z, obj_name):
+        #create torus object with radii, location and name
         bpy.ops.mesh.primitive_torus_add(align='WORLD', location=(x, y, z), 
         rotation=(np.pi/2, 0, 0), major_radius=r1, minor_radius=r1-r2)
         # rename the object
@@ -72,7 +80,7 @@ def instantiate_model():
 
 
     def create_empty(x, y, z, rx, ry, rz, obj_name):
-
+        # create coord system with location, orientation and name
         rx, ry, rz = np.array([rx, ry, rz])/180*np.pi
 
         bpy.ops.object.empty_add(type='ARROWS',
@@ -87,7 +95,7 @@ def instantiate_model():
         return bpy.context.object
 
 
-    def create_contraint(obj, con_type, from_name, to_name):
+    def create_constraint(obj, con_type, from_name, to_name):
 
         bpy.ops.rigidbody.constraint_add()
         bpy.context.object.rigid_body_constraint.type = con_type
@@ -103,10 +111,10 @@ def instantiate_model():
             # create material
             mat = bpy.data.materials.new(name=name)
             mat.use_nodes = True
-        
+        #set nodes to color
         nodes = mat.node_tree.nodes
         nodes["Principled BSDF"].inputs[0].default_value = vals
-
+        #command requireed to make it happen
         obj.data.materials[0] = mat
         nodes["Principled BSDF"].inputs[0].keyframe_insert('default_value')
 
@@ -127,13 +135,13 @@ def instantiate_model():
 
     #create constraints
     temp_vessel_empty = create_empty(0, 0, 0, 0, 0, 0, 'Vessel Driver')
-    vessel_driver = create_contraint(temp_vessel_empty, 'FIXED', 'Pedestal', 'Vessel')
+    vessel_driver = create_constraint(temp_vessel_empty, 'FIXED', 'Pedestal', 'Vessel')
 
     temp_rot_empty = create_empty(0, 0, 6, 0, 0, 0, 'Rotation Hinge')
-    rot_hinge = create_contraint(temp_rot_empty, 'HINGE', 'Boom', 'Pedestal')
+    rot_hinge = create_constraint(temp_rot_empty, 'HINGE', 'Boom', 'Pedestal')
 
     temp_ext_empty = create_empty(0, 0, 0, 0, 0, 0, 'Extension Slider')
-    ext_slider = create_contraint(temp_ext_empty, 'SLIDER', 'Extension', 'Boom')
+    ext_slider = create_constraint(temp_ext_empty, 'SLIDER', 'Extension', 'Boom')
 
 
     #connect bodies to coordinate systems
@@ -151,7 +159,7 @@ def instantiate_model():
     rot_hinge.parent = pedestal_empty
     ext_slider.parent = boom_empty
     
-    
+    #save objects to return to env for operation in episode
     vessel_obj = bpy.data.objects['Vessel Driver']
     rot_obj = bpy.data.objects['Rotation Hinge']
     ext_obj = bpy.data.objects['Extension Slider']
@@ -159,7 +167,7 @@ def instantiate_model():
     target_obj =bpy.data.objects['Target']
     scene = bpy.context.scene
     
-    #set target material
+    #set colors via materials for visuals
     set_material(vessel, 'Vessel Material', (0.80, 0.0, 0.0, 1))
     set_material(pedestal, 'Pedestal Material', (0.8, 0.5, 0.0, 1.0))
     set_material(boom, 'Boom Material', (0.8, 0.5, 0.0, 1.0))
@@ -170,9 +178,9 @@ def instantiate_model():
     #set background blue
     bpy.data.worlds["World"].node_tree.nodes["Background"].inputs[0].default_value = (0, 0.4, 0.8, 1)
 
+    #create camera and light for renderings
     bpy.ops.object.camera_add()
     bpy.context.object.name = 'Camera'   
-    
     bpy.ops.object.light_add()
     bpy.context.object.name = 'Light'    
 

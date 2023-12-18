@@ -8,9 +8,15 @@ from rl_control.params import *
 
 
 class Env():
-    def __init__(self, sim_time, Hs, Tp, seed, ramp_time=10, rand_start=True):
+    '''
+    Class to create Blender model and handle animating the environmen
+    through each step in the episode.
+    Typical RL setup in  that you can
+    '''
+    def __init__(self, sim_time, Hs, Tp, seed, ramp_time=10, 
+                 ext=None, rot=None):
 
-        #delete any object in current scene
+        #delete any objects in current scene
         self.delete_all_objs()
 
         #rebuilt model for
@@ -20,34 +26,40 @@ class Env():
         self.Tp = Tp
         self.seed = seed
         self.frame = 0
-        self.wave, self.surge, self.heave, self.pitch = self.generate_wave(ramp_time)
         self.sim_time = sim_time
         self.time_step = TIME_STEP
-        self.state = self.set_initial_state(rand_start)
+        self.wave, self.surge, self.heave, self.pitch = self.generate_wave(ramp_time)
+        self.state = self.set_initial_state(ext, rot)
         self.done = False
 
-    # Generate the wave
+    # Generate wave with function
     def generate_wave(self, ramp_time):
-        return generate_wave_train(self.Hs, self.Tp, self.seed, ramp_time=ramp_time)
+        return generate_wave_train(self.Hs, self.Tp, self.seed, 
+                    sim_time=self.sim_time, ramp_time=ramp_time)
 
-    # Set initial zero position
-    def set_initial_state(self, rand_start=True):
+    # Set initial position
+    def set_initial_state(self, ext, rot):
         vessel_x,_,vessel_z = self.vessel.location
         _,vessel_ry,_ = self.vessel.rotation_euler
         vessel_vx, vessel_vz = 0.0, 0.0
         vessel_vry = 0.0
-        if rand_start:
-            ext_x = (np.random.random()-0.5)*5
-            rot_ry = (np.random.random()-0.5)*np.pi/4
+        
+        if ext:
+            ext_x = ext
         else:
-            ext_x = -2.5
-            rot_ry = 22.5*np.pi/180
-
+            ext_x = (np.random.random()-0.5)*5
+            
+        if rot:
+            rot_ry = rot*np.pi/180
+        else:
+            rot_ry = (np.random.random()-0.5)*np.pi/4
+         
         self.ext.location[0] = ext_x
         self.rot.rotation_euler[1] = rot_ry
 
         return vessel_x, vessel_z, vessel_ry, vessel_vx, vessel_vz, vessel_vry, ext_x, rot_ry
-    # Get the position after a set time step
+    
+    # Get positions and velocitys of vessel and crane for state indo
     def get_new_state(self):
         vessel_x,_,vessel_z = self.vessel.location
         _,vessel_ry,_ = self.vessel.rotation_euler
@@ -61,7 +73,7 @@ class Env():
 
         return vessel_x, vessel_z, vessel_ry, vessel_vx, vessel_vz, vessel_vry, ext_x, rot_ry
 
-# Function to change vessel,crane,reward based on this time step and confirmation with get_done()
+    # Take one step in envorinment  
     def step(self, action):
         self.frame +=1
         self.scene.frame_set(self.frame)
@@ -74,7 +86,7 @@ class Env():
 
         return self.state,self.reward,self.done
 
-# Function to move the vessel based on the new frame
+    # Set next vessel position from generated wave motions
     def move_vessel(self):
 
         x = self.surge[self.frame]
@@ -91,12 +103,12 @@ class Env():
         self.vessel.keyframe_insert(data_path="location",index=-1)
         self.vessel.keyframe_insert(data_path="rotation_euler")
 
-#  Function to move the vessel based on the new frame
+    #  Set new crane position with chosen action
     def move_crane(self,action):
 
-        # Set crane extension
+        # get and adjust extension
         x = self.state[-2]
-
+        
         x += action[0]*TRANSLATE_INC
         y = 0
         z = 0
@@ -104,7 +116,7 @@ class Env():
         self.ext.location = (x,y,z)
         self.ext.keyframe_insert(data_path="location",index=-1)
 
-        # Set crane rotation
+        # get and adjust rotation
         ry = self.state[-1]
 
         rx = np.radians(90)
@@ -115,19 +127,19 @@ class Env():
         self.rot.rotation_euler  = (rx,ry,rz)
         self.rot.keyframe_insert(data_path="rotation_euler")
 
-# Generate a reward (Basic Euclidean can add more)
+    # get reward with location of payload and target
     def get_reward(self):
         payload_loc = self.payload.matrix_world.translation
         target_loc = self.target.matrix_world.translation
         reward = generate_euclidean_reward(target_loc, payload_loc)
         return reward
 
-# Check if the cycle is over
+    # Update done parameter when episode over
     def get_done(self):
         if self.frame == (self.sim_time/self.time_step) - 1:
             self.done = True
 
-# Generate the rendered picture and video
+    # Render photo frames and video
     def get_media(self, render_loc, episode='last'):
         abs_path = os.path.dirname(__file__)
         render_dir = f'{abs_path}/../../renderings/{render_loc}/'
@@ -137,11 +149,12 @@ class Env():
         render_images(render_dir, episode)
         generate_video(render_dir, episode, f'Sim_Vid_ep={episode}')
 
-# Reset the environment and delete the objects for new episode
+    # Reset the environment and delete the objects for new episode
     def delete_all_objs(self):
         bpy.ops.object.select_all(action='SELECT')
         bpy.ops.object.delete(use_global=False, confirm=False)
 
+    # Change color of target based payload accuracy (visual feedback)
     def update_target(self):
         m = bpy.data.materials.get('Target Material')
         nodes = m.node_tree.nodes
@@ -156,11 +169,3 @@ class Env():
 
         self.target.data.materials[0] = m
         nodes["Principled BSDF"].inputs[0].keyframe_insert('default_value')
-
-if __name__ == '__main__':
-    Hs = 2.5
-    Tp = 8
-    seed = 34
-    action = [-1,1]
-    sim_time = 60
-    env = Env(sim_time,Hs,Tp,seed)

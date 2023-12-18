@@ -11,10 +11,6 @@ class Agent():
                   input_dims, model_loc, epsilon_dec=0.9, epsilon_end=0.01,
                   mem_size=10000, replace_target=1800):
 
-    #Dont train both networks
-    #Only train the target network that you use to choose actions,
-    #replace the weights of the target network every 100 episodes.
-
         self.action_space = [i for i in range(n_actions)]
         self.gamma = gamma
         self.epsilon = epsilon
@@ -33,11 +29,11 @@ class Agent():
         if not os.path.exists(self.model_dir):
             os.makedirs(self.model_dir)
 
-    #Stores the the ​state-action-reward
+    #Stores the the ​state-action-reward in replay buffer object
     def store_transition(self, state, action, reward, state_, done):
         self.memory.store_transition(state, action, reward, state_, done)
 
-    #Choose an action, i.e. a policy, chooses an action based on its current state
+    #Choose action, policy is epsilon greedy
     def choose_action(self, observation):
         if np.random.random() < self.epsilon:
             action = np.random.choice(self.action_space)
@@ -47,6 +43,8 @@ class Agent():
             action = np.argmax(action_vals)
         return action
 
+    #get action value, incremental change or no change
+    # issue as this fixed action space but its set in initiation
     def get_action_values(self, action_idx):
         actions = [[-1,-1],
                     [-1,0],
@@ -62,20 +60,12 @@ class Agent():
 
     def learn(self):
 
-        #When do we perform learning? Once the max_size is reach and memory is full?
-        #If the number of memories saved is less than the batch size you will end up
-        #sampling a single memory batch size times (single memory 64 times), you will
-        #end up sampling the same batch 64 times - not good for training.
-
-        #Double Q = q-value of a q-value
+        #Double Q network
 
         if self.memory.mem_cntr > self.batch_size:
 
             state, actions, rewards, state_, done = \
                                 self.memory.sample_buffer(self.batch_size)
-
-            #action_values = np.array(self.action_space, dtype=np.int8)
-            #action_indices = np.dot(actions, action_values)
 
             q_next = self.q_targ.predict(state_, verbose=0)
             q_eval = self.q_eval.predict(state_, verbose=0)
@@ -98,19 +88,22 @@ class Agent():
 
             return losses
 
+    #update epsilon value when called from outside Class
     def update_epsilon(self):
         self.epsilon = self.epsilon*self.epsilon_dec if self.epsilon > \
             self.epsilon_min else self.epsilon_min
 
+    #update network when training or loading
     def update_network(self):
         self.q_targ.set_weights(self.q_eval.get_weights())
 
-
+    #save keras model and pickle memory
     def model_save(self, episode='last'):
         self.q_eval.save(f'{self.model_dir}/episode={episode}/{self.model_file}')
         file=open(f'{self.model_dir}/episode={episode}/mem.pkl' ,"wb")
         pickle.dump(self.memory,file)
 
+    #load model and memory from chosen episode folder. predict option skips mem pickle load
     def model_load(self, episode='last', predict=False):
         self.q_eval = load_model(f'{self.model_dir}/episode={episode}/{self.model_file}')
         if not predict:
