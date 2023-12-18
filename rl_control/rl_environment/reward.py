@@ -1,4 +1,6 @@
 
+#reward functions
+
 def generate_euclidean_reward(target_loc, payload_loc):
 
     x = payload_loc[0] - target_loc[0]

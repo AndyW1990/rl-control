@@ -3,6 +3,9 @@ import numpy as np
 
 class ReplayBuffer(object):
     def __init__(self, max_size, input_dims):
+        '''
+        Objeoct (so pickleable) to store agent memory and sample from
+        '''
         self.mem_size = max_size
         self.mem_cntr = 0
         self.state_memory = np.zeros((self.mem_size, *input_dims), 

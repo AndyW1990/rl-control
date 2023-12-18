@@ -44,7 +44,7 @@ agent = Agent(
     epsilon=0,
     batch_size=128,
     input_dims=(8,),
-    floc=MODEL_FOLDER)
+    model_loc=MODEL_FOLDER)
 
 agent.model_load(episode, predict=True)
 
@@ -55,7 +55,7 @@ seed = 42
 
 ### Instanciate Environment
 env = Env(sim_time, Hs, Tp, seed,
-            ramp_time=ramp_time, rand_start=False)
+            ramp_time=ramp_time, ext=-2.5, rot=22.5)
 
 
 ### Setting blender scene stuff
@@ -85,7 +85,7 @@ def process_vid(hs_user, tp_user, seed_user):
         score += reward
         observation = observation_
 
-    env.get_media(agent.model_dir, episode)
+    env.get_media(MODEL_FOLDER, episode)
     average_score = -score/sim_time*TIME_STEP
 
     # More for debuggin

@@ -50,8 +50,13 @@ def generate_wave_train(Hs, Tp, seed, N=5000, r_min=0.5, r_max=10,
     heave = []
     pitch = []
     
-    #ramp up slowly (log style)
-    ramp_values = np.logspace(0,1,int(ramp_time/time_step))/10
+    #ramp up dynamics slowly (log style)
+    ramp_values =  np.logspace(0,1,int(ramp_time/time_step))/10
+    ramp = np.ones(int(sim_time/time_step))
+    ramp[:int(ramp_time/time_step)] = ramp_values   
+    #loop through time steps and calc wave and motions
+    t = np.arange(0,sim_time, time_step)
+
     
     for t in np.arange(0,sim_time, time_step):
         if t < ramp_time:
@@ -89,7 +94,7 @@ def interpolate_raos(target_freqs):
     
     #loop through columns 6DoF amplitudes and phases and perform interpolation
     raos = []
-    for col_name, col_vals in df.items():
+    for _, col_vals in df.items():
         raos.append(np.interp(target_freqs, rao_freq, col_vals))
     
     return raos
